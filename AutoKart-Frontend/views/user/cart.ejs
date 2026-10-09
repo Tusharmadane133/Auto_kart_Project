@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title><%= __('your_cart') %> | AutoKart</title>
+
+   <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f1f3f6;
+}
+
+/* PAGE */
+.cart-page {
+  max-width: 1300px;
+  margin: 20px auto;
+  padding: 0 16px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+/* LEFT */
+.cart-left {
+  flex: 3;
+  background: #fff;
+  border-radius: 4px;
+}
+
+.cart-left-header {
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.cart-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.item-image img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  border: 1px solid #f0f0f0;
+  padding: 6px;
+  background: #fff;
+}
+
+
+.item-details {
+  flex: 1;
+}
+
+.item-details h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.stock {
+  color: #388e3c;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.qty-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+    margin-top: 10px;
+}
+
+.qty-form button {
+    width: 26px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.qty-form input {
+  
+  width: 35px;
+  height: 32px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #2874f0;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.remove-btn {
+  display: inline-block;
+  margin-top: 15px;
+}
+
+
+.item-price {
+  font-size: 18px;
+  font-weight: 600;
+white-space: nowrap;
+}
+
+
+/* RIGHT */
+.cart-right {
+  flex: 1.2;
+  background: #fff;
+  border-radius: 4px;
+  padding: 16px;
+  min-height: 345px;
+
+}
+
+.cart-right h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.free {
+  color: #388e3c;
+}
+
+.price-total {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed #ccc;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+}
+
+.checkout-btn {
+  width: 100%;
+  margin-top: 100px;
+  height: 48px;
+  background: #fb641b;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* EMPTY */
+.empty-cart {
+  padding: 40px;
+  width: 400px;
+  height: 290px;
+  text-align: center;
+  font-size: 16px;
+}
+
+
+
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .cart-page {
+    flex-direction: column;
+    padding: 8px;
+  }
+
+  /* Cart item layout */
+  .cart-item {
+    flex-direction: row;              /* 🔥 row hi rehne do */
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* Image */
+  .item-image img {
+    width: 150px;
+    height: 150px;
+    flex-shrink: 0;
+  }
+
+  /* Details */
+  .item-details {
+    flex: 1;
+  }
+
+  .item-details h3 {
+    font-size: 15px;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+
+  .stock {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .item-actions {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* Price BELOW details (not right side) */
+  .item-price {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  /* Price box */
+  .cart-right {
+    width: 100%;
+    margin-top: 12px;
+    padding: 16px;
+  }
+
+  /* Place order */
+  .checkout-btn {
+    margin-top: 20px;
+    height: 52px;
+    font-size: 17px;
+    border-radius: 6px;
+  }
+}
+
+
+  </style>
+
+</head>
+
+<body>
+
+<%- include('partials/header') %>
+
+<%
+  let totalItems = 0;
+  let totalPrice = 0;
+
+  if (cart && cart.length) {
+    cart.forEach(item => {
+      totalItems += item.quantity;
+      totalPrice += item.price * item.quantity;
+    });
+  }
+%>
+
+<div class="cart-page">
+
+
+  <!-- LEFT -->
+    <div class="cart-left">
+
+      <div class="cart-left-header">
+        <%= __('your_cart') %> (<%= totalItems %> <%= __('items') %>)
+
+      </div>
+
+      <% if (!cart || cart.length === 0) { %>
+        <div class="empty-cart">
+          🛒 <%= __('cart_empty') %>
+        </div>
+      <% } else { %>
+
+      <% cart.forEach(item => { %>
+
+        <div class="cart-item">
+
+          <div class="item-image">
+  <img src="/uploads/<%= item.image %>" alt="<%= item.product_name %>">
+</div>
+
+
+          <div class="cart-item-details">
+
+           <div class="cart-item-name auto-translate">
+  <%= item.product_name %>
+</div>
+
+           <%const remaining = item.stock_quantity - item.quantity;%>
+
+<% if (remaining > 5) { %>
+
+  <div class="cart-stock" style="color:#388e3c; font-weight:500;">
+    In stock
+  </div>
+
+<% } else if (remaining > 0) { %>
+
+  <div class="cart-stock" style="color:#d32f2f; font-weight:600;">
+    Only <%= remaining %> more available
+  </div>
+
+<% } else { %>
+
+  <div class="cart-stock" style="color:#118dfa; font-weight:700;">
+  <%= __('new_stock_soon') %>
+</div>
+
+
+<% } %>
+
+
+
+            <div class="qty-controls">
+
+  <form method="POST" action="/cart/update" class="qty-form">
+
+    <input type="hidden" name="product_id" value="<%= item.product_id %>">
+
+    <button type="submit" name="action" value="decrease" class="qty-btn">−</button>
+
+    <input type="text" class="qty-input" value="<%= item.quantity %>" readonly>
+
+    <button 
+  type="submit" 
+  name="action" 
+  value="increase" 
+  class="qty-btn"
+  <%= item.quantity >= item.stock_quantity ? "disabled style='background:#eee; cursor:not-allowed;'" : "" %>
+>
+  +
+</button>
+
+  </form>
+
+  <form method="POST" action="/cart/remove">
+    <input type="hidden" name="product_id" value="<%= item.product_id %>">
+    <button class="remove-btn">
+  <%= __('delete') %>
+</button>
+
+  </form>
+
+</div>
+
+
+          </div>
+
+          <div class="cart-item-price" style="display: flex; flex-direction: column; align-items: flex-end;">
+            <% if (item.discount && item.discount > 0) { %>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="text-decoration: line-through; color: #878787; font-size: 14px;">
+                  ₹<%= (item.original_price || item.price) * item.quantity %>
+                </span>
+                <span style="color: #388e3c; font-size: 18px; font-weight: bold;">
+                  ₹<%= Math.round(item.price * item.quantity) %>
+                </span>
+                <span style="background: #ff3e6c; color: white; padding: 1px 6px; border-radius: 3px; font-size: 12px; font-weight: bold;">
+                  <%= Math.round(item.discount) %>% OFF
+                </span>
+              </div>
+              <div style="font-size: 12px; color: #388e3c;">
+                You save ₹<%= Math.round(((item.original_price || item.price) - item.price) * item.quantity) %>
+              </div>
+            <% } else { %>
+              <span style="color: #388e3c; font-size: 18px; font-weight: bold;">
+                ₹<%= Math.round(item.price * item.quantity) %>
+              </span>
+            <% } %>
+          </div>
+
+        </div>
+
+      <% }) %>
+
+    <% } %>
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="cart-right">
+
+    <div class="price-title">
+      <%= __('price_details') %>
+    </div>
+
+    <div class="price-box">
+
+      <div class="price-row">
+        <span><%= __('price_items', totalItems) %></span>
+        <span>₹ <%= totalPrice %></span>
+      </div>
+
+      <div class="price-row">
+        <span><%= __('delivery_charges') %></span>
+        <span style="color:green;"><%= __('free') %></span>
+      </div>
+
+      <div class="price-total">
+        <span><%= __('total_amount') %></span>
+        <span>₹ <%= totalPrice %></span>
+      </div>
+
+      <form action="/create-checkout" method="POST">
+        <button type="submit" class="checkout-btn">
+          <%= __('proceed_to_checkout') %>
+        </button>
+      </form>
+
+    </div>
+
+  </div> <!-- CLOSE cart-right -->
+
+
+  </div>
+  <script>
+async function translateText(text) {
+  try {
+    const res = await fetch(
+      "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=mr&dt=t&q=" 
+      + encodeURIComponent(text)
+    );
+
+    const data = await res.json();
+    return data[0][0][0];
+  } catch (error) {
+    console.error("Translation error:", error);
+    return text;
+  }
+}
+
+async function translateElements() {
+
+  const currentLang = "<%= currentLang %>";
+
+  if (currentLang !== "mr") return;
+
+  const elements = document.querySelectorAll(".auto-translate");
+
+  for (let el of elements) {
+    const originalText = el.innerText.trim();
+    if (!originalText) continue;
+
+    const translated = await translateText(originalText);
+    el.innerText = translated;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", translateElements);
+</script>
+<%- include('partials/footer') %>
+</body>
+</html>

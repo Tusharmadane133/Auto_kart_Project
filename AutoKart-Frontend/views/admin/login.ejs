@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+  }
+
+  body {
+    height: 100vh;
+    background: #eef1f5; /* same dashboard background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Login Card */
+  .login-box {
+    width: 380px;
+    padding: 35px 30px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-top: 5px solid #1f2d3d; /* same navbar color */
+    animation: slideFade 0.4s ease;
+  }
+
+  .login-box h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #1f2d3d;
+    font-weight: 600;
+  }
+
+  .admin-icon {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #1f2d3d;
+  }
+
+  .input-box {
+    margin-bottom: 18px;
+  }
+
+  .input-box input {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 6px;
+    border: 1px solid #dcdfe3;
+    background: #f9fafb;
+    font-size: 14px;
+    transition: 0.2s ease;
+  }
+
+  .input-box input:focus {
+    outline: none;
+    border-color: #1f2d3d;
+    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(31,45,61,0.08);
+  }
+
+  /* Login Button */
+  .login-box button {
+    width: 100%;
+    padding: 11px;
+    border: none;
+    border-radius: 6px;
+    background: #1f2d3d; /* matches sidebar */
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.25s ease;
+  }
+
+  .login-box button:hover {
+    background: #2f4055;
+  }
+
+  /* Subtle animation like admin cards */
+  @keyframes slideFade {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+</head>
+<body>
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get("error") === "notfound") {
+    alert("Admin not found ❌");
+  }
+
+  if (params.get("error") === "wrongpass") {
+    alert("Invalid password ❌");
+  }
+
+  if (params.get("error") === "server") {
+    alert("Server error ⚠️");
+  }
+
+  if (params.get("success")) {
+    alert("Login Successful ✅");
+  }
+</script>
+
+  <div class="login-box">
+    <div class="admin-icon">🔐</div>
+    <h2>Admin Login</h2>
+
+    <form action="/admin/login" method="POST">
+
+      <div class="input-box">
+        <input type="text" name="username" placeholder="Admin Username" required  pattern="^[a-zA-Z0-9_]{5,15}$"
+  title="Username must be 5-15 characters and contain only letters, numbers, or underscore"/>
+      </div>
+
+      <div class="input-box">
+        <input type="password" name="password" placeholder="Admin Password" required  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+  title="Password must be at least 8 characters and include uppercase, lowercase, number and special character"/>
+      </div>
+
+      <button type="submit">Login</button>
+
+    </form>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <%- generateMetaTags(meta, hreflangUrls) %>
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  <%- JSON.stringify(structuredData) %>
+  </script>
+
+  <!-- NAVBAR CSS -->
+  <link rel="stylesheet" href="/css/navbar.css">
+
+  <style>
+    /* GLOBAL BODY — KEEP CLEAN */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+    }
+
+    /* PAGE WRAPPER — SAME WIDTH AS HOME */
+    .page-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 18px;
+      font-size: 24px;
+      font-weight: 500;
+      color: #212121;
+    }
+
+    /* PRODUCT GRID — EXACT 5 PER ROW */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+
+    .product-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    /* PRODUCT CARD — FLIPKART STYLE */
+    .product-card {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      padding: 10px;
+      text-align: center;
+      transition: box-shadow 0.2s ease;
+      position: relative;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* IMAGE — BIG & DOMINANT */
+    .product-card img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+    }
+
+    .product-card h4 {
+      font-size: 14px;
+      font-weight: 500;
+      margin: 6px 0;
+      color: #212121;
+      height: 38px;
+      overflow: hidden;
+    }
+
+    .product-card .price-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 8px 0;
+    }
+
+    .product-card .original-price {
+      text-decoration: line-through;
+      color: #878787;
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    .product-card .current-price {
+      color: #388e3c;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .product-card .discount-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ff3e6c;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      z-index: 1;
+    }
+
+    /* RESPONSIVE SAFETY (OPTIONAL BUT SAFE) */
+    @media (max-width: 1200px) {
+      .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* =========================
+   MOBILE: HEADER ALIGN FIX
+========================= */
+    @media (max-width: 768px) {
+
+      body {
+        padding-top: 0 !important;
+      }
+
+      .page-container {
+        padding: 10px !important;
+        /* tighter like home */
+      }
+
+      h2 {
+        font-size: 18px;
+        margin: 12px 0;
+      }
+    }
+
+    /* ================= PAGINATION ================= */
+
+.pagination {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.page-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  margin: 4px;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  color: #333;
+  background: #fff;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.page-btn:hover {
+  border-color: #2874f0;
+  color: #2874f0;
+}
+
+.page-btn.active {
+  background: #2874f0;
+  color: #fff;
+  border-color: #2874f0;
+}
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <%- include('partials/header') %>
+
+<!-- Breadcrumb Navigation -->
+<%- include('partials/breadcrumb') %>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-container">
+
+      <h2>
+        <%= currentLang==='mr' && section.name_mr ? section.name_mr : section.name %>
+      </h2>
+
+
+      <% if (products.length===0) { %>
+        <p>No products found</p>
+        <% } else { %>
+
+          <div class="products-grid">
+
+            <% products.forEach(p=> { %>
+
+              <a href="/product/<%= p.display_slug %>?lang=<%= currentLang %>" class="product-link">
+
+                <div class="product-card">
+
+                  <img src="/uploads/<%= p.image %>" alt="<%= p.product_name %>">
+
+                  <% if (p.discount && p.discount> 0) { %>
+                    <div class="discount-badge">
+                      <%= Math.round(p.discount) %>% OFF
+                    </div>
+                    <% } %>
+
+                      <h4 class="auto-translate">
+                     <%= p.product_name %>
+                    </h4>
+
+                      <div class="price-container">
+                        <% if (p.discount && p.discount> 0) { %>
+                          <span class="original-price">
+                            ₹<%= p.original_price %>
+                          </span>
+                          <span class="current-price">
+                            ₹<%= Math.round(p.price) %>
+                          </span>
+                          <% } else { %>
+                            <span class="current-price">
+                              ₹<%= Math.round(p.price) %>
+                            </span>
+                            <% } %>
+                      </div>
+
+                </div>
+              </a>
+
+              <% }) %>
+
+          </div>
+
+
+          <% } %>
+
+    </div>
+    
+
+<% if (totalPages >= 1) { %>
+
+<div class="pagination">
+
+  <% if (hasPrev) { %>
+    <a href="?page=<%= prevPage %>&lang=<%= currentLang %>" class="page-btn">
+      ← Previous
+    </a>
+  <% } %>
+
+  <% for (let i = 1; i <= totalPages; i++) { %>
+    <a href="?page=<%= i %>&lang=<%= currentLang %>"
+       class="page-btn <%= i === currentPage ? 'active' : '' %>">
+       <%= i %>
+    </a>
+  <% } %>
+
+  <% if (hasNext) { %>
+    <a href="?page=<%= nextPage %>&lang=<%= currentLang %>" class="page-btn">
+      Next →
+    </a>
+  <% } %>
+
+</div>
+
+<% } %>
+
+
+    <script>
+async function translateText(text) {
+  try {
+    const res = await fetch(
+      "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=mr&dt=t&q=" 
+      + encodeURIComponent(text)
+    );
+
+    const data = await res.json();
+    return data[0][0][0];
+  } catch (error) {
+    console.error("Translation error:", error);
+    return text;
+  }
+}
+
+async function translateElements() {
+
+  const currentLang = "<%= currentLang %>";
+
+  if (currentLang !== "mr") return;
+
+  const elements = document.querySelectorAll(".auto-translate");
+
+  for (let el of elements) {
+    const originalText = el.innerText.trim();
+    if (!originalText) continue;
+
+    const translated = await translateText(originalText);
+    el.innerText = translated;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", translateElements);
+</script>
+
+    <%- include('partials/footer') %>
+</body>
+
+</html>

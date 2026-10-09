@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Product | AutoKart Admin</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+    }
+
+    .header {
+      background: #1f2a30;
+      color: #fff;
+      padding: 15px 30px;
+      font-size: 20px;
+    }
+
+    .container {
+      padding: 30px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 6px;
+      font-weight: bold;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      background: #2874f0;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1f5fd1;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: #2874f0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">AutoKart Admin Panel</div>
+
+  <div class="container">
+    <a href="/admin" class="back-link">← Back to Dashboard</a>
+
+    <div class="card">
+      <h2>Add New Product</h2>
+
+      <!-- FORM -->
+      <form method="POST" action="/admin/products/add">
+
+        <label>Section</label>
+        <select name="section_id" required>
+          <option value="">-- Select Section --</option>
+          <option value="1">Shop</option>
+          <option value="2">Vehicle Type</option>
+          <option value="3">Categories</option>
+          <option value="4">Electronics</option>
+        </select>
+
+        <label>Sub Section</label>
+        <select name="sub_section_id" required>
+          <option value="">-- Select Sub Section --</option>
+          <!-- will be dynamic later -->
+        </select>
+
+        <label>Product Name</label>
+        <input type="text" name="product_name" required>
+
+        <label>Product Description</label>
+        <textarea name="product_description"></textarea>
+
+        <label>Price (₹)</label>
+        <input type="number" name="price" step="0.01">
+
+        <button type="submit">Save Product</button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

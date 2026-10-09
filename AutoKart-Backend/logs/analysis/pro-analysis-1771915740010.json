@@ -1,0 +1,195 @@
+{
+  "timestamp": "2026-02-24T06:48:59.819Z",
+  "summary": {
+    "totalRequests": 3168,
+    "googlebotRequests": 0,
+    "bingbotRequests": 0,
+    "otherBots": 0,
+    "humanRequests": 3168,
+    "error404Count": 14,
+    "error500Count": 0,
+    "crawlBudgetUsed": 0,
+    "topPages": [
+      {
+        "url": "/phpmyadmin/index.php?route=/navigation&ajax_request=1",
+        "count": 532
+      },
+      {
+        "url": "/phpmyadmin/index.php?route=/config/get",
+        "count": 400
+      },
+      {
+        "url": "/phpmyadmin/index.php?route=/config/set",
+        "count": 203
+      },
+      {
+        "url": "/phpmyadmin/index.php?route=/",
+        "count": 134
+      },
+      {
+        "url": "/phpmyadmin/index.php?route=/version-check",
+        "count": 80
+      },
+      {
+        "url": "/phpmyadmin/",
+        "count": 73
+      },
+      {
+        "url": "/phpmyadmin/index.php?route=/database/structure/favorite-table&ajax_request=1&favorite_table=1&sync_favorite_tables=1",
+        "count": 58
+      },
+      {
+        "url": "/phpmyadmin/index.php?route=/lint",
+        "count": 57
+      },
+      {
+        "url": "/phpmyadmin/js/messages.php?l=en_GB&v=5.2.1",
+        "count": 54
+      },
+      {
+        "url": "/phpmyadmin/index.php?route=/import",
+        "count": 46
+      }
+    ],
+    "top404s": [
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "count": 14
+      }
+    ],
+    "crawlPatterns": {},
+    "hourlyDistribution": {
+      "NaN": 3168
+    },
+    "statusCodeDistribution": {
+      "200": 3068,
+      "302": 4,
+      "304": 82,
+      "404": 14
+    }
+  },
+  "googlebotAnalysis": {
+    "crawlFrequency": {},
+    "pagesCrawled": [],
+    "crawlRate": 0,
+    "avgResponseTime": 0,
+    "issues": [],
+    "recommendations": [
+      {
+        "priority": "high",
+        "type": "404 Fix",
+        "message": "Fix 14 404 errors to improve Googlebot crawling efficiency"
+      },
+      {
+        "priority": "medium",
+        "type": "Crawl Rate",
+        "message": "Low Googlebot crawl rate detected. Consider improving content and internal linking"
+      }
+    ]
+  },
+  "crawlBudgetAnalysis": {
+    "totalCrawlRequests": 0,
+    "wastedCrawls": 0,
+    "efficientCrawls": 0,
+    "budgetOptimization": [],
+    "crawlBudgetUsed": "0.00"
+  },
+  "errorAnalysis": {
+    "total404s": [
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "11/Feb/2026:14:14:49 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "11/Feb/2026:14:17:29 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "11/Feb/2026:14:28:37 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "11/Feb/2026:14:30:25 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "11/Feb/2026:14:31:11 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "11/Feb/2026:14:38:54 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "11/Feb/2026:16:51:07 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "11/Feb/2026:16:58:22 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "11/Feb/2026:18:27:58 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "11/Feb/2026:18:38:30 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "12/Feb/2026:11:55:24 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "12/Feb/2026:11:57:25 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "12/Feb/2026:11:59:07 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      },
+      {
+        "url": "/.well-known/appspecific/com.chrome.devtools.json",
+        "timestamp": "12/Feb/2026:12:11:43 +0530",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+        "ip": "::1"
+      }
+    ],
+    "total500s": [],
+    "criticalErrors": [],
+    "errorPatterns": {},
+    "fixRecommendations": [
+      {
+        "priority": "high",
+        "type": "Popular 404",
+        "message": "URL \"/.well-known/appspecific/com.chrome.devtools.json\" has 14 404 errors. Consider implementing a redirect"
+      }
+    ]
+  }
+}

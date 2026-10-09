@@ -1,0 +1,328 @@
+<style>
+/* ====== LAYOUT ====== */
+.order-page {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.section {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+/* ====== HEADER ====== */
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.order-meta {
+  font-size: 14px;
+  color: #323232;
+  margin-top: 6px;
+}
+
+/* ====== STATUS BADGE ====== */
+.badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.PLACED { background:#e3f2fd; color:#0d47a1; }
+.CONFIRMED { background:#ede7f6; color:#4527a0; }
+.SHIPPED { background:#fff3cd; color:#856404; }
+.OUT_FOR_DELIVERY { background:#ffe0b2; color:#e65100; }
+.DELIVERED { background:#d4edda; color:#155724; }
+.CANCELLED { background:#f8d7da; color:#721c24; }
+
+/* ====== GRID ====== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 20px;
+}
+
+/* ====== INFO TEXT ====== */
+.info p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+/* ====== STATUS FORM ====== */
+.status-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.status-form button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: #2874f0;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.status-form button:hover {
+  background: #1c5fd4;
+}
+
+/* ====== TABLE ====== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th {
+  background: #f7f7f7;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+tfoot td {
+  font-weight: bold;
+  background: #fafafa;
+}
+
+.ordered-items-header {
+  display: flex;
+  justify-content: space-between; /* 👈 pushes button right */
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Small clean button */
+.invoice-btn.invoice-right {
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 4px;
+  background: #e1dcdc;
+  color: #000000;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+}
+
+.invoice-btn.invoice-right:hover {
+  background: #e3e5ea;
+  text-decoration: none;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.8fr;
+  gap: 20px;
+  align-items: start;
+}
+
+</style>
+
+<div class="order-page">
+
+  <!-- ===== ORDER HEADER ===== -->
+  <div class="section">
+    <div class="order-header">
+      <div>
+        <h2>Order #<%= order.order_id %></h2>
+        <div class="order-meta">
+          <strong>Date:</strong> <%= new Date(order.created_at).toDateString() %><br>
+          <strong>Payment:</strong> <%= order.payment_method %> / <%= order.payment_status %>
+        </div>
+      </div>
+
+      <span class="badge <%= order.order_status %>">
+        <%= order.order_status.replace(/_/g, " ") %>
+      </span>
+    </div>
+  </div>
+
+ <!-- ===== CUSTOMER + ADDRESS + STATUS (ONE ROW) ===== -->
+<div class="three-col">
+
+  <!-- CUSTOMER DETAILS -->
+  <section class="section info">
+    <h3>Customer Details</h3>
+
+    <p><strong>Name:</strong>
+      <%= order.user_first_name %> <%= order.user_last_name %>
+    </p>
+
+    <p><strong>Mobile:</strong> <%= order.user_mobile %></p>
+    <p><strong>Email:</strong> <%= order.user_email %></p>
+    <p><strong>Total Amount:</strong> ₹<%= order.calculated_total %></p>
+  </section>
+
+  <!-- DELIVERY ADDRESS -->
+  <section class="section info">
+    <h3>Delivery Address</h3>
+
+    <p><strong><%= order.address_name %></strong></p>
+    <p><%= order.address_line %></p>
+
+    <% if (order.landmark && order.landmark.trim() !== "") { %>
+      <p><%= order.landmark %></p>
+    <% } %>
+
+    <p>
+      <%= order.city %>, <%= order.state %> - <%= order.pincode %>
+    </p>
+
+    <p><strong>Mobile:</strong> <%= order.address_mobile %></p>
+    <p><strong>Type:</strong> <%= order.address_type %></p>
+  </section>
+
+  <!-- UPDATE ORDER STATUS -->
+  <section class="section status-form">
+    <h3>Update Order Status</h3>
+
+    <form
+      action="/admin/orders/<%= order.order_id %>/status"
+      method="POST"
+    >
+      <select name="order_status" required>
+        <% 
+          const statuses = [
+            "PLACED",
+            "CONFIRMED",
+            "SHIPPED",
+            "OUT_FOR_DELIVERY",
+            "DELIVERED",
+            "CANCELLED"
+          ];
+        %>
+
+        <% statuses.forEach(status => { %>
+          <option
+            value="<%= status %>"
+            <%= order.order_status === status ? "selected" : "" %>
+          >
+            <%= status.replace(/_/g, " ") %>
+          </option>
+        <% }) %>
+      </select>
+
+      <button type="submit">
+        Update Status
+      </button>
+    </form>
+  </section>
+
+</div>
+
+ <!-- ===== ORDER ITEMS ===== -->
+<div class="section">
+
+  <div class="ordered-items-header">
+    <h3>Ordered Items</h3>
+
+    <a
+  href="/admin/orders/<%= order.order_id %>/invoice"
+  class="invoice-btn invoice-right"
+  target="_blank"
+>
+  Download Invoice
+</a>
+
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% let grandTotal = 0; %>
+      <% items.forEach(item => { 
+        const lineTotal = item.price * item.quantity;
+        grandTotal += lineTotal;
+      %>
+        <tr>
+          <td><%= item.product_name %></td>
+          <td>₹<%= item.price %></td>
+          <td><%= item.quantity %></td>
+          <td>₹<%= lineTotal %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <td colspan="3">Grand Total</td>
+        <td>₹<%= grandTotal %></td>
+      </tr>
+    </tfoot>
+  </table>
+
+</div>
+<% if (cancelRequest && order.order_status !== "CANCELLED") { %>
+
+  <div class="section" style="
+    border-left: 5px solid #ff9800;
+    background: #fff8e1;
+  ">
+    <h3 style="margin-top:0; color:#e65100;">
+      ⚠ Cancellation Requested
+    </h3>
+
+    <p style="margin:6px 0;">
+      <strong>Reason:</strong>
+      <%= cancelRequest.reason %>
+    </p>
+
+    <% if (cancelRequest.description) { %>
+      <p style="margin:6px 0;">
+        <strong>Description:</strong>
+        <%= cancelRequest.description %>
+      </p>
+    <% } %>
+
+    <p style="font-size:12px; color:#666; margin-top:10px;">
+      Requested on:
+      <%= new Date(cancelRequest.created_at).toDateString() %>
+    </p>
+  </div>
+<% } %>
+<% if (order.order_status === "CANCELLED") { %>
+  <div class="section">
+    <div class="tracking">
+      <div class="tracking-step">
+        <div class="tracking-dot inactive"></div>
+        <strong style="color:#d32f2f;">
+          Order Cancelled
+        </strong>
+      </div>
+      <p style="margin-left:26px; font-size:13px; color:#666;">
+        This order has been cancelled and will not be delivered.
+      </p>
+    </div>
+  </div>
+<% } %>

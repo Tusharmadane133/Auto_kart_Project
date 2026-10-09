@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <%- generateMetaTags(meta, hreflangUrls) %>
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  <%- JSON.stringify(structuredData) %>
+  </script>
+
+  <style>
+    /* ===== TOP CENTER TOAST ===== */
+.cart-toast {
+  position: fixed;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #323232;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 99999;
+  transition: top 0.4s ease;
+}
+
+.cart-toast.show {
+  top: 20px;
+}
+
+  /* cart ch ahe  */
+#cart-count.cart-bounce {
+    transform: scale(1.5);
+    transition: transform 0.3s ease;
+}
+
+  body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eaeded;
+}
+    
+
+    /* MAIN WRAPPER */
+    .product-page {
+  max-width: 100%;
+  margin: 20px auto;
+  background: #ffffff;
+  padding: 24px 40px;
+  display: flex;
+  gap: 40px;
+}
+
+    /* LEFT SIDE */
+    .product-left {
+      width: 45%;
+    }
+
+    .product-image-box {
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .product-image-box img {
+      width: 100%;
+      max-height: 100px;
+      object-fit: contain;
+    }
+
+   .action-buttons {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.add-cart-btn,
+.buy-now-btn {
+  display: inline-flex;          /* 🔥 behaves like button */
+  align-items: center;
+  justify-content: center;
+
+  width: 160px;
+  height: 44px;
+
+  background: #fb641b;
+  color: #fff;
+
+  border: none;
+  border-radius: 4px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  text-decoration: none;         /* 🔥 removes underline */
+}
+
+.buy-now-btn:hover {
+  background: #e85c17;
+}
+
+
+.add-cart-btn {
+  background: #ff9f00;
+  color: #fff;
+}
+
+.buy-now-btn {
+  background: #fb641b;
+  color: #fff;
+}
+
+    
+    /* RIGHT SIDE */
+    .product-right {
+      width: 60%;
+    }
+
+    .product-title {
+      font-size: 22px;
+      font-weight: 500; /* NOT too bold */
+      color: #212121;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .product-price {
+      font-size: 26px;
+      font-weight: 600;
+      color: #388e3c;
+      margin: 15px 0;
+    }
+
+    .product-description-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      color: #212121;
+    }
+
+    .product-description {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.8;
+  padding-left: 18px;
+}
+
+
+
+/* IMAGE GALLERY */
+.image-gallery {
+  display: flex;
+  gap: 15px;
+}
+
+/* LEFT SMALL IMAGES */
+.thumbnail-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.thumbnail-column img {
+  width: 88px;
+  height: 68px;
+  object-fit: contain;   /* 👈 KEY FIX */
+  background: #fff;
+}
+
+
+
+.thumbnail-placeholder {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #ccc;
+  object-fit: cover;
+  cursor: pointer;
+  background: #f5f5f5;
+}
+
+.thumbnail-column img:hover {
+  border: 2px solid #2874f0;
+}
+
+/* MAIN IMAGE */
+.main-image img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+}
+.image-zoom-container {
+  display: flex;
+  gap: 20px;
+  position: relative;
+  width: 100%;
+}
+
+
+/* Main image */
+.image-wrapper {
+  position: relative;
+  width: 420px;
+  height: 420px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Lens */
+#lens {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.15);
+  display: none;
+  cursor: crosshair;
+
+  pointer-events: none; /* 🔥 KEY FIX */
+}
+
+
+/* Zoom preview */
+.zoom-preview {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 20px);
+  width: 120%;
+  height: 120%;
+
+  border: 1px solid #e0e0e0;
+  background-repeat: no-repeat;
+  background-size: 350%;        /* 🔥 CLARITY BOOST */
+  image-rendering: auto;        /* 🔥 SHARPER ZOOM */
+  background-color: #fff;
+
+  display: none;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* cccccccccccccccccccccccccccccccccccccccccccccccccccccc */
+/* ===== MODAL ALERT ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-box {
+  background: #fff;
+  padding: 25px 35px;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 300px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: pop 0.3s ease;
+}
+
+.modal-box h3 {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.modal-box button {
+  padding: 8px 22px;
+  border: none;
+  background: #2874f0;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ff3e6c;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 2;
+}
+
+
+
+/* =========================
+   MOBILE ONLY
+========================= */
+@media (max-width: 768px) {
+
+  .product-page {
+    max-width: 100%;
+    margin: 0;
+    padding: 12px;
+    gap: 16px;
+    flex-direction: column;
+  }
+
+  .product-left,
+  .product-right {
+    width: 100%;
+  }
+
+  .image-gallery {
+    flex-direction: column;
+  }
+
+  .image-wrapper {
+    width: 100%;
+    height: 280px;
+  }
+
+  .thumbnail-column {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+  }
+
+  .thumbnail-column img {
+    width: 60px;
+    height: 60px;
+  }
+
+  /* 🔥 STICKY BOTTOM BAR */
+  .action-buttons {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    padding: 10px 12px;
+    gap: 12px;
+    border-top: 1px solid #e0e0e0;
+    z-index: 9999;
+  }
+
+  .add-cart-btn {
+    width: 50%;
+    height: 46px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    background: #ff9f00; /* SAME DARK */
+  }
+
+  .buy-now-form { width: 50%; }
+
+  .buy-now-form button {
+    width: 100%;
+    height: 46px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    background: #fb641b; /* SAME DARK */
+    color: #fff;
+    border: none;
+  }
+
+  /* space for sticky bar */
+  .product-page {
+    padding-bottom: 90px;
+  }
+
+  /* disable zoom */
+  #lens,
+  .zoom-preview {
+    display: none !important;
+  }
+}
+/* ===========================
+   AMAZON STYLE REVIEW SECTION
+=========================== */
+
+/* ===== AMAZON STYLE GRID ===== */
+
+.review-grid{
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 60px;
+}
+
+/* LEFT COLUMN */
+.review-summary{
+  font-size:14px;
+}
+
+.big-rating{
+  font-size:32px;
+  font-weight:700;
+}
+
+.big-rating span{
+  color:#ffa41c;
+}
+
+.total-ratings{
+  color:#565959;
+  margin-bottom:15px;
+}
+
+/* rating rows */
+.rating-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:6px 0;
+}
+
+.star-label{
+  width:65px;
+  color:#007185;
+}
+.stars {
+  display: flex;
+  gap: 2px;
+  font-size: 16px;
+}
+
+.star {
+  color: #ddd;              /* empty star */
+}
+
+.star.filled {
+  color: #ffa41c;           /* filled star */
+}
+.bar{
+  flex:1;
+  height:10px;
+  background:#f0f2f2;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+  background:#ffa41c;
+  width:0;
+}
+
+.percent{
+  width:40px;
+}
+
+/* RIGHT COLUMN */
+.review-content{
+  width:100%;
+}
+
+/* IMAGE STRIP */
+.review-images h3{
+  font-size:18px;
+  margin-bottom:12px;
+}
+
+.image-row{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+}
+
+.image-row img{
+  width:110px;
+  height:110px;
+  object-fit:cover;
+  border-radius:8px;
+  border:1px solid #ddd;
+  flex:0 0 auto;
+}
+
+/* REVIEWS */
+.review-card{
+  border-top:1px solid #e7e7e7;
+  padding:18px 0;
+}
+
+.stars{
+  color:#ffa41c;
+}
+
+.review-text{
+  max-width:700px;
+  line-height:1.5;
+}
+
+.review-photo{
+  width:150px;
+  height:150px;
+  object-fit:cover;
+  margin-top:10px;
+}
+
+.review-date{
+  font-size: 12px;
+  color: #565959;
+  margin: 4px 0 6px 0;
+}
+
+
+
+/* =========================
+   FULL WIDTH REVIEW LAYER
+   ========================= */
+
+.review-outer {
+  width: 100%;
+  background: #eaeded;     /* same as page bg */
+  padding: 40px 0;         /* vertical spacing only */
+}
+
+/* CENTERED CONTENT (only this shrinks) */
+.review-wrapper {
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* WHITE CARD */
+.review-section {
+  background: #fff;
+  padding: 32px;
+  border-radius: 6px;
+  border: 1px solid #e3e6e6;
+}
+
+
+/* ===============================
+   AMAZON STYLE REVIEW LIGHTBOX
+=============================== */
+
+.review-lightbox {
+  display: none;
+  position: fixed;
+  z-index: 999999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-container {
+  max-width: 900px;
+  width: 90%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.lightbox-image {
+  width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  cursor: pointer;
+}
+  </style>
+</head>
+
+
+<body>
+
+<%- include('partials/header') %>
+<!-- Breadcrumb Navigation -->
+<%- include('partials/breadcrumb') %>
+
+<div id="cart-toast" class="cart-toast">
+  <%= __('added_to_cart') %>
+</div>
+
+<div class="product-page">
+
+  <!-- LEFT SIDE -->
+  <div class="product-left">
+
+    <!-- IMAGE GALLERY -->
+    <div class="image-gallery">
+
+      <!-- THUMBNAILS -->
+      <div class="thumbnail-column">
+        <% for (let i = 0; i < 5; i++) { %>
+          <% if (images && images[i]) { %>
+            <img
+              src="/uploads/<%= images[i].image %>"
+              onclick="changeImage('/uploads/<%= images[i].image %>')"
+            >
+          <% } else { %>
+            <div class="thumbnail-placeholder"></div>
+          <% } %>
+        <% } %>
+      </div>
+
+      <!-- MAIN IMAGE -->
+      <div class="image-zoom-container">
+        <div class="image-wrapper">
+
+  <% if (product.discount && product.discount > 0) { %>
+    <div class="discount-badge">
+      <%= Math.round(product.discount) %>% OFF
+    </div>
+  <% } %>
+
+  <img
+    id="mainImage"
+    src="/uploads/<%= product.image %>"
+    alt="<%= product.product_name %>"
+  >
+
+  <div id="lens"></div>
+</div>
+
+        <div class="zoom-preview" id="zoomPreview"></div>
+      </div>
+
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="action-buttons">
+
+  <% if (product.quantity > 0) { %>
+
+    <button
+      class="add-cart-btn"
+      data-product-id="<%= product.id %>"
+    >
+      <%= __('add_to_cart') %>
+    </button>
+
+    <form action="/create-checkout" method="POST">
+      <input type="hidden" name="product_id" value="<%= product.id %>">
+      <button type="submit" class="buy-now-btn">
+        <%= __('buy_now') %>
+      </button>
+    </form>
+
+  <% } else { %>
+
+    <button
+      style="background:#bdbdbd; cursor:not-allowed;"
+      disabled
+      class="add-cart-btn"
+    >
+      <%= __('out_of_stock') %>
+    </button>
+
+    <button
+      style="background:#2874f0;"
+      class="buy-now-btn"
+      onclick="showToast('We will notify you when available')"
+      type="button"
+    >
+      <%= __('notify_me') %>
+    </button>
+
+  <% } %>
+
+</div>
+
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+<div class="product-right">
+
+  <div class="product-title auto-translate">
+  <%= product.product_name %>
+</div>
+
+
+  <div class="product-price">
+
+  <% if (product.discount && product.discount > 0) { %>
+
+    <span style="text-decoration:line-through; color:#878787; font-size:16px;">
+      ₹<%= product.original_price || product.price %>
+    </span>
+
+    ₹<%= Math.round(product.price) %>
+
+  <% } else { %>
+
+    ₹<%= Math.round(product.price) %>
+
+  <% } %>
+
+</div>
+
+
+  <% if (product.quantity > 5) { %>
+
+    <p style="color:#388e3c; font-weight:600;">
+      <%= __('in_stock') %>
+    </p>
+
+  <% } else if (product.quantity > 0) { %>
+
+    <p style="color:#d32f2f; font-weight:600;">
+      <%= __('only_left', { count: product.quantity }) %>
+    </p>
+
+  <% } else { %>
+
+    <p style="color:#d32f2f; font-weight:700;">
+      <%= __('out_of_stock') %>
+    </p>
+
+  <% } %>
+
+  <div class="product-description-title">
+    <%= __('description') %>
+  </div>
+<ul class="product-description auto-translate">
+  <% 
+    const desc = product.product_description || '';
+    desc.split('\n').forEach(function(line){
+      if(line.trim() !== ''){
+  %>
+      <li><%= line %></li>
+  <% 
+      }
+    });
+  %>
+</ul>
+
+
+
+</div>
+</div>
+<!-- Related Products Section -->
+<% if (relatedProducts && relatedProducts.length > 0) { %>
+<div style="margin: 40px 0; padding: 0 20px;">
+  <h2 style="font-size: 22px; margin-bottom: 20px; color: #212121; font-weight: 500; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">
+    You May Also Like
+  </h2>
+  
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+    <% relatedProducts.forEach(product => { %>
+      <div class="shop-product-card" style="position:relative; padding: 10px;">
+        <% if (product.discount && product.discount > 0) { %>
+          <div style="position:absolute;top:8px;right:8px;background:#ff3e6c;color:#fff;padding:4px 8px;font-size:11px;border-radius:4px;">
+            <%= Math.round(product.discount) %>% OFF
+          </div>
+        <% } %>
+        
+        <a href="/product/<%= product.display_slug || product.id %>" style="text-decoration: none; color: inherit;">
+          <img src="<%= product.image ? '/uploads/' + product.image : '/images/placeholder.png' %>" 
+               alt="<%= product.product_name %>"
+               style="width: 100%; height: 200px; object-fit: cover;"
+               onerror="this.src='/images/placeholder.png'">
+          
+          <div style="padding: 12px;">
+            <h4 class="auto-translate" style="font-size: 14px; font-weight: 500; margin: 6px 0; height: 40px; text-align: center; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+            <%= product.product_name %>
+            </h4>
+            
+            <div>
+              <p style="font-size: 15px; font-weight: bold; text-align: center; color: #388e3c; margin: 5px 0;">
+                
+                <% if (product.original_price && product.original_price > product.price) { %>
+                  <span style="font-size: 13px; color: #878787; text-align: center; text-decoration: line-through;">
+                    ₹<%= Math.round(product.original_price) %>
+                  </span>
+                  <% } %>
+                  ₹<%= Math.round(product.price) %>
+              </p>
+            </div>
+            
+            <% if (product.quantity > 0) { %>
+              <div style="font-size: 12px; color: #388e3c;">In Stock</div>
+            <% } else { %>
+              <div style="font-size: 12px; color: #d32f2f;">Out of Stock</div>
+            <% } %>
+          </div>
+        </a>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<style>
+  .shop-product-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .shop-product-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+  }
+
+  @media (max-width: 768px) {
+    .shop-product-card {
+      padding: 8px;
+    }
+    
+    .shop-product-card img {
+      height: 140px;
+    }
+    
+    .shop-product-card h4 {
+      font-size: 13px;
+      height: 36px;
+      margin: 4px 0;
+    }
+  }
+</style>
+<% } %>
+
+<!-- Custom Alert Modal -->
+<!-- <div id="cart-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>Added to cart</h3>
+    <button onclick="closeCartModal()">OK</button>
+  </div>
+</div> -->
+
+  
+<script>
+
+
+  /* ================= IMAGE ZOOM ================= */
+
+const mainImage = document.getElementById("mainImage");
+const lens = document.getElementById("lens");
+const zoomPreview = document.getElementById("zoomPreview");
+
+if (mainImage && lens && zoomPreview) {
+
+  const zoomLevel = 2;
+
+  function moveLens(e) {
+
+    const rect = mainImage.getBoundingClientRect();
+
+    let x = e.clientX - rect.left - lens.offsetWidth / 2;
+    let y = e.clientY - rect.top - lens.offsetHeight / 2;
+
+    x = Math.max(0, Math.min(x, rect.width - lens.offsetWidth));
+    y = Math.max(0, Math.min(y, rect.height - lens.offsetHeight));
+
+    lens.style.left = x + "px";
+    lens.style.top = y + "px";
+
+    zoomPreview.style.backgroundPosition =
+      -(x * zoomLevel) + "px " + -(y * zoomLevel) + "px";
+  }
+
+  mainImage.addEventListener("mouseenter", () => {
+    lens.style.display = "block";
+    zoomPreview.style.display = "block";
+    zoomPreview.style.backgroundImage = `url(${mainImage.src})`;
+
+    zoomPreview.style.backgroundSize =
+      mainImage.width * zoomLevel + "px " +
+      mainImage.height * zoomLevel + "px";
+  });
+
+  mainImage.addEventListener("mouseleave", () => {
+    lens.style.display = "none";
+    zoomPreview.style.display = "none";
+  });
+
+  mainImage.addEventListener("mousemove", moveLens);
+}
+
+
+  /* ================= THUMB CHANGE ================= */
+  window.changeImage = function (src) {
+    mainImage.src = src;
+    zoomPreview.style.backgroundImage = `url(${src})`;
+  };
+
+  /* ================= TOP TOAST ================= */
+  function showToast(msg) {
+    const toast = document.getElementById("cart-toast");
+    if (!toast) return;
+
+    toast.innerText = msg;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 2000);
+  }
+
+  /* ================= ADD TO CART ================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  document.addEventListener("click", async function (e) {
+
+    const btn = e.target.closest(".add-cart-btn");
+    if (!btn) return;
+
+    e.preventDefault();
+
+    const productId = btn.dataset.productId;
+
+    try {
+      const res = await fetch("/add-to-cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: productId, qty: 1 })
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        showToast("❌ Failed to add product");
+        return;
+      }
+
+      if (typeof refreshCartCount === "function") {
+        await refreshCartCount();
+      }
+
+      showToast("✅ Product added to cart");
+
+    } catch (err) {
+      console.error("Add to cart error:", err);
+      showToast("⚠️ Server error");
+    }
+  });
+
+});
+
+
+</script>
+
+
+
+<script>
+async function translateText(text) {
+  try {
+    const res = await fetch(
+      "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=mr&dt=t&q=" 
+      + encodeURIComponent(text)
+    );
+
+    const data = await res.json();
+    return data[0][0][0];
+  } catch (error) {
+    console.error("Translation error:", error);
+    return text;
+  }
+}
+
+async function translateElements() {
+
+  const currentLang = "<%= currentLang %>";
+
+  if (currentLang !== "mr") return;
+
+  const elements = document.querySelectorAll(".auto-translate");
+
+  for (let el of elements) {
+
+    // 🔥 If UL list asel tar LI wise translate kar
+    if (el.tagName === "UL") {
+
+      const listItems = el.querySelectorAll("li");
+
+      for (let li of listItems) {
+        const originalText = li.innerText.trim();
+        if (!originalText) continue;
+
+        const translated = await translateText(originalText);
+        li.innerText = translated;   // ✅ only li text change
+      }
+
+    } else {
+
+      const originalText = el.innerText.trim();
+      if (!originalText) continue;
+
+      const translated = await translateText(originalText);
+      el.innerText = translated;
+    }
+  }
+}
+
+document.addEventListener("DOMContentLoaded", translateElements);
+</script>
+
+
+
+
+<section class="review-outer">
+  <div class="review-wrapper">
+  <div class="review-section">
+<%
+let counts = {5:0,4:0,3:0,2:0,1:0};
+
+reviews.forEach(r => {
+  if (counts[r.rating] !== undefined) {
+    counts[r.rating]++;
+  }
+});
+
+const total = reviews.length;
+%>
+  <h2 class="review-main-title">Customer reviews</h2>
+
+  <div class="review-grid">
+
+    <!-- ================= LEFT COLUMN ================= -->
+    <div class="review-summary">
+
+      <div class="big-rating">
+        <%= averageRating %> <span>★</span>
+      </div>
+      <div class="total-ratings">
+        <%= total %> global ratings
+      </div>
+
+      <% for (let star = 5; star >= 1; star--) {
+           let percent = total > 0 ? Math.round((counts[star] / total) * 100) : 0;
+      %>
+
+      <div class="rating-row">
+        <span class="star-label"><%= star %> star</span>
+
+        <div class="bar">
+          <div class="fill" data-percent="<%= percent %>"></div>
+        </div>
+
+        <span class="percent"><%= percent %>%</span>
+      </div>
+
+      <% } %>
+
+    </div>
+
+
+    <!-- ================= RIGHT COLUMN ================= -->
+    <div class="review-content">
+
+      <!-- Images -->
+      <div class="review-images">
+        <h3>Reviews with images</h3>
+
+        <div class="image-row">
+          <% reviews.forEach(r => { if(r.review_image){ %>
+            <img 
+  src="/uploads/reviews/<%= r.review_image %>" 
+  class="review-thumb"
+>
+          <% } }) %>
+        </div>
+      </div>
+
+
+      <!-- Review List -->
+      <div class="review-list">
+        <% reviews.forEach(review => { %>
+
+        <div class="review-card">
+
+          <h4><%= review.user_first_name %> <%= review.user_last_name %></h4>
+
+        <%
+   const ratingValue = Number(review.rating) || 0;
+%>
+
+<div class="stars">
+  <% for (let i = 1; i <= 5; i++) { %>
+    <% if (i <= ratingValue) { %>
+      <span class="star filled">★</span>
+    <% } else { %>
+      <span class="star">★</span>
+    <% } %>
+  <% } %>
+</div>
+
+          <p class="review-date">
+            Reviewed on
+            <%= new Date(review.created_at).toLocaleDateString('en-IN',{
+              day:'numeric', month:'long', year:'numeric'
+            }) %>
+          </p>
+
+          <p class="review-text"><%= review.review_text %></p>
+
+       
+
+        
+
+        </div>
+
+        <% }) %>
+      </div>
+
+    </div>
+
+  </div>
+
+  </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".fill").forEach(function(el){
+    const percent = el.getAttribute("data-percent");
+    el.style.width = percent + "%";
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+  const lightbox = document.getElementById("reviewLightbox");
+  const lightboxImg = document.getElementById("lightboxImage");
+  const closeBtn = document.querySelector(".lightbox-close");
+
+  // open lightbox
+  document.querySelectorAll(".review-thumb").forEach(img => {
+    img.addEventListener("click", function(){
+      lightbox.style.display = "flex";
+      lightboxImg.src = this.src;
+      document.body.style.overflow = "hidden";
+    });
+  });
+
+  // close button
+  closeBtn.addEventListener("click", function(){
+    lightbox.style.display = "none";
+    document.body.style.overflow = "auto";
+  });
+
+  // click outside to close
+  lightbox.addEventListener("click", function(e){
+    if(e.target === lightbox){
+      lightbox.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+  });
+
+});
+</script>
+
+
+<!-- REVIEW IMAGE LIGHTBOX -->
+<div id="reviewLightbox" class="review-lightbox">
+  <span class="lightbox-close">&times;</span>
+
+  <div class="lightbox-container">
+    <img id="lightboxImage" class="lightbox-image">
+  </div>
+</div>
+<%- include('partials/footer') %>
+
+</body>
+</html>

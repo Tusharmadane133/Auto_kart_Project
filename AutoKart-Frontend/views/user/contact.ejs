@@ -1,0 +1,204 @@
+<%- include('partials/header') %>
+
+<!-- SEO Meta Tags -->
+<%- generateMetaTags(meta, hreflangUrls) %>
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+<%- JSON.stringify(structuredData) %>
+</script>
+
+<style>
+  /* ===== CONTACT PAGE BACKGROUND (PREMIUM) ===== */
+  .contact-page-wrapper {
+    background:
+      radial-gradient(circle at 20% 20%, rgba(40,116,240,0.08), transparent 40%),
+      radial-gradient(circle at 80% 30%, rgba(37,211,102,0.10), transparent 40%),
+      linear-gradient(180deg, #f7f9fc 0%, #eef2f7 100%);
+    padding: 70px 0 90px;
+  }
+
+  .contact-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 0 15px;
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  .contact-title {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #111;
+  }
+
+  .contact-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 50px;
+    font-size: 15px;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+
+  .contact-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 22px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+
+  .contact-card:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      0 18px 50px rgba(0,0,0,0.15),
+      0 0 0 1px rgba(40,116,240,0.08);
+  }
+
+  .contact-card i {
+    font-size: 36px;
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  .contact-card h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111;
+  }
+
+  .contact-card p,
+  .contact-card a {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #333;
+    text-decoration: none;
+    display: block;
+  }
+
+  /* ICON COLORS */
+  .call i { color: #0d6efd; }
+  .email i { color: #6f42c1; }
+  .address i { color: #fd7e14; }
+  .hours i { color: #20c997; }
+  .whatsapp i { color: #25D366; }
+
+  /* WHATSAPP CTA BUTTON */
+  .whatsapp-btn {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .whatsapp-btn a {
+    background: linear-gradient(135deg, #25D366, #1ebe5d);
+    color: #fff;
+    padding: 15px 38px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 14px 32px rgba(37,211,102,0.45);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .whatsapp-btn a:hover {
+    transform: scale(1.06);
+    box-shadow: 0 18px 45px rgba(37,211,102,0.55);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .contact-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="contact-page-wrapper">
+  <div class="contact-container">
+
+    <h1 class="contact-title"><%= __('contact_us') %></h1>
+    <p class="contact-subtitle">
+      <%= __('contact_subtitle') %>
+    </p>
+
+    <div class="contact-grid">
+
+      <!-- CALL -->
+      <div class="contact-card call">
+        <i class="fa fa-phone"></i>
+        <h4><%= __('call_us') %></h4>
+        <a href="tel:<%= contact.phone %>"><%= contact.phone %></a>
+      </div>
+
+      <!-- EMAIL -->
+      <div class="contact-card email">
+        <i class="fa fa-envelope"></i>
+        <h4><%= __('email_support') %></h4>
+        <a href="mailto:<%= contact.email %>"><%= contact.email %></a>
+      </div>
+
+      <!-- ADDRESS -->
+      <div class="contact-card address">
+        <i class="fa fa-location-dot"></i>
+        <h4><%= __('office_address') %></h4>
+
+        <p>
+          <a 
+            href="https://www.google.com/maps/search/Vision%20Spacio/@18.67568831,73.87486255,17z?hl=en" 
+            target="_blank"
+            style="text-decoration:none; color:inherit;"
+          >
+            <%= __('office_line1') %><br>
+            <%= __('office_line2') %><br>
+            <%= __('office_line3') %>
+          </a>
+        </p>
+      </div>
+
+      <!-- WHATSAPP CARD -->
+      <a
+        href="https://wa.me/<%= contact.whatsapp %>"
+        target="_blank"
+        class="contact-card whatsapp"
+        style="text-decoration:none;"
+      >
+        <i class="fab fa-whatsapp" style="color:#25D366; font-size:28px;"></i>
+        <h4><%= __('whatsapp_support') %></h4>
+        <p><%= __('fast_reply') %></p>
+      </a>
+
+    </div>
+
+    <!-- WHATSAPP BUTTON -->
+    <div class="whatsapp-btn">
+      <a href="https://wa.me/<%= contact.whatsapp %>" target="_blank">
+        <i class="fab fa-whatsapp" style="color:#d5eadd; font-size:28px;"></i>
+        <%= __('chat_whatsapp') %>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+

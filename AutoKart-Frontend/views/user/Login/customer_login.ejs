@@ -1,0 +1,154 @@
+<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= __('login') %> | AutoKart</title>
+ <link rel="stylesheet" href="/css/customer_login.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  .password-box{
+  position:relative;
+}
+
+.password-box input{
+  width:100%;
+  padding-right:40px;
+}
+
+.toggle-pass{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  font-size:16px;
+  color:#666;
+}
+
+.toggle-pass:hover{
+  color:#000;
+}
+</style>
+</head>
+
+<body>
+
+
+<div class="auth-wrapper">
+<div class="main-container">
+
+<!-- LEFT -->
+<div class="left-box">
+  <h1><%= __('login_title_text') %></h1>
+  <p><%= __('login_sub_text') %></p>
+</div>
+
+<!-- RIGHT -->
+<div class="right-box">
+
+<% if (success) { %>
+  <div class="success-message" style="background:#e6ffed; color:#008000; padding:10px; margin-bottom:15px; border-radius:5px; font-size:14px; text-align:center;">
+    <%= success %>
+  </div>
+<% } %>
+
+<% if (error) { %>
+  <div class="error-box">
+    <%= error %>
+  </div>
+<% } %>
+
+<form action="/customer_login" method="post" >
+<input type="hidden" name="returnTo" value="<%= typeof returnTo !== 'undefined' ? returnTo : '' %>">
+<label><%= __('email_label') %></label>
+<input 
+  type="email"
+  name="user_email"
+  placeholder="<%= __('email_label') %>"
+  required
+  
+>
+
+<% if (fieldError && fieldError.user_email) { %>
+  <div style="color:red; font-size:13px; margin-top:-15px; margin-bottom:10px;">
+    <%= fieldError.user_email %>
+  </div>
+<% } %>
+<label><%= __('password_label') %></label>
+<div class="password-box">
+  <input 
+    type="password"
+    id="login_password"
+    name="user_password"
+    placeholder="<%= __('password_placeholder') %>"
+    required
+  >
+  <span class="toggle-pass" onclick="togglePass('login_password', this)">
+    <i class="fa-solid fa-eye"></i>
+  </span>
+</div>
+
+<% if (fieldError && fieldError.user_password) { %>
+  <div style="color:red; font-size:13px; margin-top:-15px; margin-bottom:10px;">
+    <%= fieldError.user_password %>
+  </div>
+<% } %>
+<!-- REMEMBER ME -->
+
+<div class="remember-wrapper">
+  <label class="remember-label">
+    <input type="checkbox" name="remember_me" value="1">
+    <span>Remember Me</span>
+  </label>
+</div>
+
+
+<p class="terms">
+<%= __('login_terms_text') %>
+<span><%= __('terms_of_use') %></span> &
+<span><a href="/privacy" style="color:#2874f0;"><%= __('privacy_policy') %></a></span>.
+</p>
+
+<button type="submit" class="btn-primary">
+<%= __('login_account_btn') %>
+</button>
+
+<div class="forgot-wrapper">
+  <a href="/forgot-password" class="forgot-link">
+    🔒 <%= __('Forgot_password') %>
+  </a>
+</div>
+
+<a href="/register" class="login-link">
+<%= __('create_account_here') %>
+</a>
+
+
+</form>
+
+
+</div>
+</div>
+</div>
+<script>
+function togglePass(id, icon){
+  const input = document.getElementById(id);
+  const eyeIcon = icon.querySelector("i");
+
+  if(input.type === "password"){
+    input.type = "text";
+    eyeIcon.classList.remove("fa-eye");
+    eyeIcon.classList.add("fa-eye-slash");
+  }else{
+    input.type = "password";
+    eyeIcon.classList.remove("fa-eye-slash");
+    eyeIcon.classList.add("fa-eye");
+  }
+}
+</script>
+<%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,726 @@
+<%- include('../partials/header') %>
+
+<!-- SEO Meta Tags -->
+<%- generateMetaTags(meta, hreflangUrls) %>
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+<%- JSON.stringify(structuredData) %>
+</script>
+
+<style>
+  /* Professional Blog Post Styles - AutoKart Brand */
+  .blog-post-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+  }
+
+  .blog-post-header {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 40px 30px;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border-radius: 15px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .blog-post-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .blog-post-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    position: relative;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .blog-post-meta {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .blog-post-meta span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+  }
+
+  .blog-post-image {
+    width: 100%;
+    max-height: 450px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    transition: transform 0.6s ease;
+  }
+
+  .blog-post-image:hover {
+    transform: scale(1.02);
+  }
+
+  .blog-post-content {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    position: relative;
+  }
+
+  .blog-post-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #007bff, #28a745);
+    border-radius: 15px 15px 0 0;
+  }
+
+  .blog-post-content h1,
+  .blog-post-content h2,
+  .blog-post-content h3,
+  .blog-post-content h4,
+  .blog-post-content h5,
+  .blog-post-content h6 {
+    color: #2c3e50;
+    margin-top: 35px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    position: relative;
+  }
+
+  .blog-post-content h1 { font-size: 2.2rem; }
+  .blog-post-content h2 { font-size: 2rem; }
+  .blog-post-content h3 { font-size: 1.8rem; }
+  .blog-post-content h4 { font-size: 1.6rem; }
+  .blog-post-content h5 { font-size: 1.4rem; }
+  .blog-post-content h6 { font-size: 1.2rem; }
+
+  .blog-post-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #007bff, #28a745);
+    border-radius: 2px;
+  }
+
+  .blog-post-content p {
+    margin-bottom: 25px;
+    text-align: justify;
+  }
+
+  .blog-post-content ul,
+  .blog-post-content ol {
+    margin-bottom: 25px;
+    padding-left: 35px;
+  }
+
+  .blog-post-content li {
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .blog-post-content ul li::before {
+    content: '▶';
+    position: absolute;
+    left: -20px;
+    color: #007bff;
+    font-size: 0.8rem;
+  }
+
+  .blog-post-content blockquote {
+    border-left: 4px solid #007bff;
+    padding: 20px 25px;
+    margin: 30px 0;
+    font-style: italic;
+    color: #495057;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 0 10px 10px 0;
+    position: relative;
+  }
+
+  .blog-post-content blockquote::before {
+    content: '"';
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    font-size: 3rem;
+    color: #007bff;
+    opacity: 0.3;
+  }
+
+  .blog-post-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 30px 0;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    transition: transform 0.3s ease;
+  }
+
+  .blog-post-content img:hover {
+    transform: scale(1.02);
+  }
+
+  .blog-post-tags {
+    margin-bottom: 50px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  }
+
+  .blog-post-tags h3 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #007bff;
+    position: relative;
+  }
+
+  .blog-post-tags h3::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, #28a745, #007bff);
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .tag {
+    background: linear-gradient(135deg, #e9ecef, #dee2e6);
+    color: #495057;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tag::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    transition: left 0.3s ease;
+    z-index: -1;
+  }
+
+  .tag:hover::before {
+    left: 0;
+  }
+
+  .tag:hover {
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+  }
+
+  .related-posts {
+    margin-top: 50px;
+    padding-top: 50px;
+    border-top: 2px solid #e9ecef;
+  }
+
+  .related-posts h3 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+  }
+
+  .related-posts h3::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #007bff, #28a745);
+    border-radius: 2px;
+  }
+
+  .related-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+  }
+
+  .related-post {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+  }
+
+  .related-post::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #007bff, #28a745);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .related-post:hover::before {
+    transform: scaleX(1);
+  }
+
+  .related-post:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  }
+
+  .related-post-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .related-post:hover .related-post-image {
+    transform: scale(1.05);
+  }
+
+  .related-post-content {
+    padding: 25px;
+  }
+
+  .related-post-title {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+
+  .related-post-title:hover {
+    color: #007bff;
+  }
+
+  .related-post-meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 60px;
+    color: #6c757d;
+    font-size: 1.2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  }
+
+  .loading::before {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 15px;
+    vertical-align: middle;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .error {
+    text-align: center;
+    padding: 60px;
+    color: #dc3545;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  }
+
+  .error::before {
+    content: '⚠️';
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  .back-to-blog {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 30px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 12px 24px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: white;
+  }
+
+  .back-to-blog:hover {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 5px 20px rgba(0, 123, 255, 0.3);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .blog-post-container {
+      padding: 20px 15px;
+    }
+
+    .blog-post-header {
+      padding: 30px 20px;
+    }
+
+    .blog-post-title {
+      font-size: 2.2rem;
+    }
+
+    .blog-post-meta {
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .blog-post-content {
+      padding: 25px;
+    }
+
+    .blog-post-content h1 { font-size: 1.8rem; }
+    .blog-post-content h2 { font-size: 1.6rem; }
+    .blog-post-content h3 { font-size: 1.4rem; }
+
+    .related-posts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Animation for page load */
+  .blog-post-container > * {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="blog-post-container">
+  <a href="/blog" class="back-to-blog">← Back to Blog</a>
+  
+  <div id="loadingSpinner" class="loading">
+    <div>Loading blog post...</div>
+  </div>
+
+  <div id="blogPostContainer" style="display: none;">
+    <!-- Blog post will be loaded here -->
+  </div>
+
+  <div id="errorMessage" class="error" style="display: none;">
+    <h2>Post Not Found</h2>
+    <p>The blog post you're looking for doesn't exist or has been removed.</p>
+    <a href="/blog" class="back-to-blog">← Back to Blog</a>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+
+  <script>
+    function getSlugFromUrl() {
+      const pathParts = window.location.pathname.split('/');
+      return pathParts[pathParts.length - 1];
+    }
+
+    function loadPost() {
+      const slug = getSlugFromUrl();
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const container = document.getElementById('blogPostContainer');
+      const errorMessage = document.getElementById('errorMessage');
+
+      loadingSpinner.style.display = 'block';
+      container.style.display = 'none';
+      errorMessage.style.display = 'none';
+
+      fetch(`/api/blog/post/${slug}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Post not found');
+          }
+          return response.json();
+        })
+        .then(post => {
+          loadingSpinner.style.display = 'none';
+          displayPost(post);
+          container.style.display = 'block';
+          
+          // Update page title
+          document.title = `${post.title} - AutoKart`;
+          
+          // Update meta tags if available
+          if (post.meta_title) {
+            document.title = post.meta_title;
+          }
+          
+          if (post.meta_description) {
+            let metaDesc = document.querySelector('meta[name="description"]');
+            if (!metaDesc) {
+              metaDesc = document.createElement('meta');
+              metaDesc.name = 'description';
+              document.head.appendChild(metaDesc);
+            }
+            metaDesc.content = post.meta_description;
+          }
+
+          if (post.meta_keywords) {
+            let metaKeywords = document.querySelector('meta[name="keywords"]');
+            if (!metaKeywords) {
+              metaKeywords = document.createElement('meta');
+              metaKeywords.name = 'keywords';
+              document.head.appendChild(metaKeywords);
+            }
+            metaKeywords.content = post.meta_keywords;
+          }
+        })
+        .catch(error => {
+          console.error('Error loading post:', error);
+          loadingSpinner.style.display = 'none';
+          errorMessage.style.display = 'block';
+        });
+    }
+
+    function formatBlogContent(content) {
+      if (!content) return '';
+      
+      // Convert plain text line breaks to HTML
+      let formattedContent = content
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>');
+      
+      // Wrap in paragraphs if not already wrapped
+      if (!formattedContent.startsWith('<p>')) {
+        formattedContent = '<p>' + formattedContent + '</p>';
+      }
+      
+      // Convert markdown-style bullet points to HTML lists
+      formattedContent = formattedContent.replace(
+        /<p>\s*[-*+]\s+(.+?)<\/p>/g,
+        '<ul><li>$1</li></ul>'
+      );
+      
+      // Convert numbered lists (start with number and dot)
+      formattedContent = formattedContent.replace(
+        /<p>\s*(\d+)\.\s+(.+?)<\/p>/g,
+        '<ol><li>$2</li></ol>'
+      );
+      
+      // Merge consecutive list items
+      formattedContent = formattedContent.replace(
+        /<\/ul><ul>/g, ''
+      ).replace(
+        /<\/ol><ol>/g, ''
+      );
+      
+      // Handle bold text (markdown **bold** or HTML <strong>)
+      formattedContent = formattedContent.replace(
+        /\*\*(.+?)\*\*/g,
+        '<strong>$1</strong>'
+      );
+      
+      // Handle italic text (markdown *italic* or HTML <em>)
+      formattedContent = formattedContent.replace(
+        /\*(.+?)\*/g,
+        '<em>$1</em>'
+      );
+      
+      // Handle headers (markdown # Header)
+      formattedContent = formattedContent.replace(
+        /<p>\s*#{1,6}\s+(.+?)<\/p>/g,
+        (match, headerText, offset, string) => {
+          const level = match.match(/#/)[0].length;
+          return `<h${Math.min(level, 6)}>${headerText}</h${Math.min(level, 6)}>`;
+        }
+      );
+      
+      // Handle links (markdown [text](url))
+      formattedContent = formattedContent.replace(
+        /\[([^\]]+)\]\(([^)]+)\)/g,
+        '<a href="$2" target="_blank">$1</a>'
+      );
+      
+      // Handle code blocks (markdown `code`)
+      formattedContent = formattedContent.replace(
+        /`([^`]+)`/g,
+        '<code>$1</code>'
+      );
+      
+      // Clean up any double paragraphs
+      formattedContent = formattedContent.replace(
+        /<p><p>/g, '<p>'
+      ).replace(
+        /<\/p><\/p>/g, '</p>'
+      );
+      
+      return formattedContent;
+    }
+
+    function displayPost(post) {
+      const container = document.getElementById('blogPostContainer');
+      
+      const postHTML = `
+        <header class="blog-post-header">
+          <h1 class="blog-post-title">${post.title}</h1>
+          <div class="blog-post-meta">
+            <span>📅 ${new Date(post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            <span>✍️ ${post.author}</span>
+            <span>👁️ ${post.view_count || 0} views</span>
+          </div>
+        </header>
+
+        ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" class="blog-post-image">` : ''}
+
+        <div class="blog-post-content">
+          ${formatBlogContent(post.content)}
+        </div>
+
+        ${post.tags && post.tags.length > 0 ? `
+          <div class="blog-post-tags">
+            <h3>Tags</h3>
+            <div class="tag-list">
+              ${post.tags.map(tag => `<a href="/blog/tag/${tag}" class="tag">${tag}</a>`).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="related-posts">
+          <h3>Related Posts</h3>
+          <div id="relatedPostsContainer">
+            <!-- Related posts will be loaded here -->
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = postHTML;
+      loadRelatedPosts(post.categories || []);
+    }
+
+    function loadRelatedPosts(categories) {
+      if (categories.length === 0) return;
+
+      // Load posts from the first category
+      fetch(`/api/blog/posts?category=${categories[0]}&limit=3`)
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById('relatedPostsContainer');
+          
+          if (data.posts.length === 0) {
+            container.innerHTML = '<p>No related posts found.</p>';
+            return;
+          }
+
+          const relatedPostsHTML = `
+            <div class="related-posts-grid">
+              ${data.posts.map(post => `
+                <div class="related-post">
+                  ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" class="related-post-image">` : ''}
+                  <div class="related-post-content">
+                    <a href="/blog/${post.slug}" class="related-post-title">${post.title}</a>
+                    <div class="related-post-meta">
+                      ${new Date(post.created_at).toLocaleDateString()}
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+
+          container.innerHTML = relatedPostsHTML;
+        })
+        .catch(error => {
+          console.error('Error loading related posts:', error);
+        });
+    }
+
+    // Load post when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadPost();
+    });
+  </script>
+</body>
+</html>

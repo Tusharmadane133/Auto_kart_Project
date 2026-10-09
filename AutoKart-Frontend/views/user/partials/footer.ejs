@@ -1,0 +1,357 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoKart Footer</title>
+
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ================= FOOTER BACKGROUND ================= */
+.footer-dark {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #ffffff;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 14px;
+  padding-top: 50px;
+  padding-bottom: 30px;
+}
+
+/* ================= FOOTER TITLE ================= */
+.footer-title {
+  color: #ffcc00;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ================= LIST ================= */
+.footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-list li {
+  margin-bottom: 10px;
+}
+
+.footer-list li a {
+  color: #e0e0e0;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.footer-list li a i {
+  font-size: 16px;
+  color: #00c6ff;
+  transition: all 0.3s ease;
+}
+
+.footer-list li a:hover {
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+.footer-list li a:hover i {
+  color: #ffcc00;
+  transform: scale(1.3);
+}
+
+/* ================= FOOTER TEXT ================= */
+.footer-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #dcdcdc;
+}
+
+/* ================= BOTTOM BORDER ================= */
+.footer-hr {
+  border: none;
+  height: 1px;
+  background: rgba(255,255,255,0.3);
+  margin: 20px 0 15px 0;
+}
+
+/* ================= SOCIAL + PAYMENT ICONS ================= */
+.social-icons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  align-items: center;
+  gap: 15px;
+}
+
+.social-icons i {
+  font-size: 24px;
+  cursor: pointer;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.social-icons i:hover {
+  color: #ffcc00;
+  transform: translateY(-4px) scale(1.2);
+}
+
+/* Payment icons slightly bigger */
+.social-icons i.fa-brands,
+.social-icons i.fa-solid {
+  font-size: 28px;
+}
+
+/* ================= FOOTER ROW ================= */
+.footer-dark .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Desktop gap only */
+@media (min-width: 769px) {
+  .footer-dark .row {
+    gap: 40px;
+  }
+}
+
+/* Each column width */
+.footer-dark .col-lg {
+  flex: 1;
+  min-width: 180px;
+  padding: 0 10px;
+}
+
+/* ================= MOBILE RESPONSIVE CLEAN ================= */
+@media (max-width: 768px) {
+
+  /* Make each section full width (no 2 column) */
+  .footer-dark .col-lg,
+  .footer-dark .col-md-4,
+  .footer-dark .col-6 {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+    margin-bottom: 25px;
+  }
+
+  /* Yellow headings left aligned */
+  .footer-title {
+    text-align: left !important;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* List compact */
+  .footer-list li {
+    margin-bottom: 8px;
+  }
+
+  .footer-list li a {
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  .footer-list li a i {
+    font-size: 15px;
+  }
+
+  /* White divider line proper spacing */
+  .footer-hr {
+    margin: 15px 0;
+    height: 1px;
+    background: rgba(255,255,255,0.35);
+  }
+
+  /* Bottom section center */
+  .footer-bottom {
+    text-align: center !important;
+    font-size: 13px;
+  }
+
+  .social-icons {
+    justify-content: center !important;
+    margin-top: 10px;
+    gap: 12px;
+  }
+
+  .social-icons i {
+    font-size: 20px;
+  }
+
+}
+
+
+</style>
+
+
+<!-- ================= FOOTER START ================= -->
+<footer class="footer-dark mt-5">
+  <div class="container py-5">
+
+    <!-- TOP FOOTER -->
+    <div class="row">
+
+      <!-- ABOUT -->
+<div class="col-lg col-md-4 col-6 mb-4">
+  <h6 class="footer-title"><%= __('about') %></h6>
+  <ul class="footer-list">
+    <li>
+      <a href="/contact">
+        <i class="bi bi-telephone"></i> <%= __('contact_us') %>
+      </a>
+    </li>
+    <li><a href="/About-us"><i class="bi bi-info-circle"></i> <%= __('about') %></a></li>
+    <li><a href="/careers"><i class="bi bi-briefcase"></i> <%= __('careers') %></a></li>
+    <li><a href="#"><i class="bi bi-newspaper"></i> <%= __('press') %></a></li>
+  </ul>
+</div>
+
+<!-- QUICK LINKS -->
+<div class="col-lg col-md-4 col-6 mb-4">
+  <h6 class="footer-title"><%= __('quick_links') %></h6>
+  <ul class="footer-list">
+
+    <li>
+      <a href="/">
+        <i class="bi bi-house-door"></i> <%= __('Home') %>
+      </a>
+    </li>
+
+    <li>
+      <a href="/shop">
+        <i class="bi bi-bag"></i> <%= __('shop') %>
+      </a>
+    </li>
+
+    <li>
+      <a href="/vehicle-type">
+        <i class="bi bi-truck-front"></i> <%= __('vehicle_type') %>
+      </a>
+    </li>
+
+    <li>
+      <a href="/categories">
+        <i class="bi bi-grid"></i> <%= __('categories') %>
+      </a>
+    </li>
+
+  </ul>
+</div>
+
+<!-- SERVICES -->
+<div class="col-lg col-md-4 col-6 mb-4">
+  <h6 class="footer-title"><%= __('services') %></h6>
+  <ul class="footer-list">
+
+    <li>
+      <a href="/electronics">
+        <i class="bi bi-cpu"></i> <%= __('electronics') %>
+      </a>
+    </li>
+
+    <li>
+      <a href="/orders">
+        <i class="bi bi-box-seam"></i> <%= __('track_order') %>
+      </a>
+    </li>
+
+    <li>
+      <a href="/gallery">
+        <i class="bi bi-images"></i> <%= __('gallery') %>
+      </a>
+    </li>
+
+    <li>
+      <a href="/contact">
+        <i class="bi bi-headset"></i> <%= __('customer_support') %>
+      </a>
+    </li>
+
+  </ul>
+</div>
+
+<!-- POLICY -->
+<div class="col-lg col-md-4 col-6 mb-4">
+  <h6 class="footer-title"><%= __('policy') %></h6>
+  <ul class="footer-list">
+    <li><a href="/returns"><i class="bi bi-arrow-repeat"></i> <%= __('returns') %></a></li>
+    <li><a href="/terms"><i class="bi bi-file-text"></i> <%= __('terms') %></a></li>
+    <li><a href="/security"><i class="bi bi-shield-lock"></i> <%= __('security') %></a></li>
+    <li><a href="/privacy"><i class="bi bi-lock"></i> <%= __('privacy') %></a></li>
+  </ul>
+</div>
+
+<!-- MAIL US -->
+<div class="col-lg col-md-4 col-6 mb-4">
+  <h6 class="footer-title"><%= __('mail_us') %></h6>
+  <ul class="footer-list">
+    <li><a href="#"><i class="bi bi-building"></i> <%= __('company_name') %></a></li>
+    <li><a href="#"><i class="bi bi-geo-alt"></i> <%= __('location_city') %></a></li>
+    <li><a href="#"><i class="bi bi-flag"></i> <%= __('location_state') %></a></li>
+    <li>
+      <a href="/become_dealer">
+        <i class="bi bi-person-badge"></i> <%= __('become_dealer') %>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- CONTACT -->
+<div class="col-lg col-md-4 col-6 mb-4">
+  <h6 class="footer-title"><%= __('contact_section') %></h6>
+  <ul class="footer-list">
+
+    <li>
+      <a href="tel:<%= contact.phone %>">
+        <i class="bi bi-phone"></i>
+        <span><%= contact.phone %></span>
+      </a>
+    </li>
+
+    <li>
+      <a href="mailto:<%= contact.email %>">
+        <i class="bi bi-envelope"></i>
+        <span><%= contact.email %></span>
+      </a>
+    </li>
+
+    <li>
+      <a href="https://wa.me/<%= contact.whatsapp %>" target="_blank">
+        <i class="bi bi-whatsapp"></i>
+        <span><%= __('chat_whatsapp') %></span>
+      </a>
+    </li>
+
+  </ul>
+</div>
+</div>
+<hr class="footer-hr">
+
+<div class="row align-items-center footer-bottom-row">
+
+  <!-- LEFT COPYRIGHT -->
+  <div class="col-md-6 col-12 footer-bottom text-md-start text-center mb-3 mb-md-0">
+    © 2025 AutoKart.com — <%= __('all_rights_reserved') %>
+  </div>
+
+  <!-- RIGHT ICONS -->
+  <div class="col-md-6 col-12 social-icons text-md-end text-center">
+    <a href="#"><i class="bi bi-instagram"></i></a>
+    <a href="#"><i class="bi bi-youtube"></i></a>
+    <a href="#"><i class="bi bi-twitter"></i></a>
+    <a href="#"><i class="fa-brands fa-cc-visa"></i></a>
+    <a href="#"><i class="fa-brands fa-cc-mastercard"></i></a>
+    <a href="#"><i class="fa-brands fa-cc-rupay"></i></a>
+    <a href="#"><i class="fa-brands fa-cc-paypal"></i></a>
+    <a href="#"><i class="fa-solid fa-qrcode"></i></a>
+  </div>
+  </div>
+</div>
+</footer>
+<!-- ================= FOOTER END ================= -->
+<script src="/js/autoTranslate.js"></script>

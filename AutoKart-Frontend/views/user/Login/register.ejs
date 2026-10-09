@@ -1,0 +1,180 @@
+<%- include('../partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= __('create_account') %> | AutoKart</title>
+ <link rel="stylesheet" href="/css/register.css">
+ <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  .password-box{
+  position:relative;
+}
+
+.password-box input{
+  width:100%;
+  padding-right:40px;
+}
+
+
+.toggle-pass{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  font-size:16px;
+  color:#666;
+}
+
+.toggle-pass:hover{
+  color:#000;
+}
+</style>
+</head>
+<body>
+
+<div class="main-container">
+
+<div class="left-box">
+  <h1><%= __('create_account') %></h1>
+  <p><%= __('signup_text') %></p>
+</div>
+
+<div class="right-box">
+
+<!-- ✅ SUCCESS MESSAGE -->
+<% if (success) { %>
+  <div class="success-message">
+    Account Created Successfully ✅
+  </div>
+<% } %>
+
+<form action="/register" method="post" autocomplete="off">
+
+<input type="text" name="user_first_name"
+placeholder="First Name"
+required maxlength="20"
+pattern="^[A-Za-z]{2,20}$"
+value="<%= old?.user_first_name || '' %>">
+
+<input type="text" name="user_last_name"
+placeholder="Last Name"
+required maxlength="20"
+pattern="^[A-Za-z]{2,20}$"
+value="<%= old?.user_last_name || '' %>">
+
+<input type="tel" name="user_mobile"
+placeholder="Mobile Number"
+required pattern="^[0-9]{10}$"
+maxlength="10"
+value="<%= old?.user_mobile || '' %>">
+
+<% if (fieldError?.user_mobile) { %>
+  <div class="field-error"><%= fieldError.user_mobile %></div>
+<% } %>
+
+<input type="email" name="user_email"
+placeholder="Email Address"
+required maxlength="50"
+value="<%= old?.user_email || '' %>">
+
+<% if (fieldError?.user_email) { %>
+  <div class="field-error"><%= fieldError.user_email %></div>
+<% } %>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="password-box">
+  <input type="password" id="password" name="user_password"
+  placeholder="Password"
+  required minlength="8" maxlength="20"
+  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,20}$">
+<span class="toggle-pass" onclick="togglePass('password', this)">
+  <i class="fa-solid fa-eye"></i>
+</span>
+</div>
+
+<div class="password-box">
+  <input type="password" id="confirm_password"
+  name="confirm_password"
+  placeholder="Confirm Password"
+  required minlength="8" maxlength="20">
+<span class="toggle-pass" onclick="togglePass('confirm_password', this)">
+  <i class="fa-solid fa-eye"></i>
+</span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<button type="submit" class="btn-primary">
+<%= __('create_account_btn') %>
+</button>
+
+<a href="/customer_login" class="login-link">
+<%= __('existing_user') %>
+</a>
+
+</form>
+
+
+</div>
+</div>
+
+<script>
+const form = document.querySelector("form");
+const password = document.getElementById("password");
+const confirmPassword = document.getElementById("confirm_password");
+
+form.addEventListener("submit", function(e){
+  if(password.value !== confirmPassword.value){
+    e.preventDefault();
+    alert("Passwords do not match!");
+  }
+});
+</script>
+<script>
+function togglePass(id, icon){
+  const input = document.getElementById(id);
+  const eyeIcon = icon.querySelector("i");
+
+  if(input.type === "password"){
+    input.type = "text";
+    eyeIcon.classList.remove("fa-eye");
+    eyeIcon.classList.add("fa-eye-slash");
+  }else{
+    input.type = "password";
+    eyeIcon.classList.remove("fa-eye-slash");
+    eyeIcon.classList.add("fa-eye");
+  }
+}
+</script>
+<%- include('../partials/footer') %>
+</body>
+</html>

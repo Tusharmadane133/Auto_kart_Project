@@ -1,0 +1,458 @@
+
+
+<link rel="stylesheet" href="/css/navbar.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- ================= TOP NAVBAR ================= -->
+<div class="top-navbar">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <a href="/">
+      <img src="/uploads/autokart_logo.jpeg" alt="Autokart Logo">
+    </a>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-box">
+   <input
+  id="searchInput"
+  type="text"
+  placeholder="<%= __('search_placeholder') %>"
+  autocomplete="off"
+/>
+
+    <button type="button">
+      <i class="fa fa-search"></i>
+    </button>
+    <div id="searchDropdown" class="search-dropdown"></div>
+  </div>
+<div class="top-actions">
+<!-- BLOG ICON -->
+<div class="blog-shortcut">
+  <a href="/blog" title="Blog">
+    <i class="fa-solid fa-newspaper"></i>
+  </a>
+</div>
+
+  <div class="lang-wrapper">
+  
+  <!-- Selected Button -->
+  <div class="lang-selected" onclick="toggleLangMenu()">
+    🌐 <%= currentLang === 'mr' ? 'मराठी' : 'Eng' %>
+    <i class="fa fa-chevron-down"></i>
+  </div>
+
+  <!-- Dropdown -->
+  <div class="lang-menu" id="langMenu">
+
+    <label class="lang-option">
+      <input type="radio" name="lang" value="en"
+        <%= currentLang === 'en' ? 'checked' : '' %>
+        onchange="changeLang('en')">
+      Eng
+    </label>
+
+    <label class="lang-option">
+      <input type="radio" name="lang" value="mr"
+        <%= currentLang === 'mr' ? 'checked' : '' %>
+        onchange="changeLang('mr')">
+      मराठी
+    </label>
+
+  </div>
+</div>
+
+
+
+  <!-- LOGIN / USER DROPDOWN -->
+  <div class="dropdown">
+    <div class="action-item">
+      <i class="fa fa-user"></i>
+<% if (currentUser) { %>
+  <span><%= currentUser.user_first_name %></span>
+<% } else { %>
+   <span><%= __('login') %></span>
+<% } %>
+      <i class="fa fa-caret-down"></i>
+    </div>
+
+    <div class="dropdown-menu">
+      <% if (!currentUser) { %>
+        <a href="/customer_login">Customer Login</a>
+      <% } %>
+
+      <% if (currentUser) { %>
+        <a href="/my_profile">My Profile</a>
+        <a href="/orders">Orders</a>
+        <a href="/logout">Logout</a>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- CART -->
+  <!-- <div class="action-item">
+    <a href="/cart" class="cart-link">
+      <i class="fa fa-shopping-cart"></i>
+      <span>Cart</span>
+    </a>
+  </div> -->
+<!-- CART -->
+<div class="action-item" style="position:relative;">
+  <a href="/cart" class="cart-link">
+    <i class="fa fa-shopping-cart"></i>
+    <span><%= __('cart') %></span>
+
+
+    <!-- ✅ CART COUNT BADGE -->
+    <span id="cart-count"
+      style="
+        position:absolute;
+        top:-9px;
+        left: 5px;
+        /* right:-5px; */
+        background:red;
+        color:white;
+        font-size:11px;
+        padding:2px 6px;
+        border-radius:50%;
+        display:none;
+      ">
+      0
+    </span>
+  </a>
+</div>
+
+</div>
+
+</div>
+
+<!-- ================= MAIN MENU ================= -->
+<div class="menu-navbar">
+  <ul>
+
+    <!-- HOME -->
+    <li class="active">
+      <a href="/"><%= __('Home') %></a>
+    </li>
+
+    <!-- DYNAMIC SECTIONS -->
+    <% if (typeof sections !== "undefined") { %>
+      <% sections.forEach(section => { %>
+
+     <li class="nav-dropdown 
+    <%= section.name.toLowerCase() === 'gallery' ? 'gallery-item' : '' %>
+    <%= section.name.toLowerCase() === 'summer' ? 'summer-item' : '' %>
+     <%= section.name.toLowerCase() === 'electronics' ? 'electronics-item' : '' %>">
+
+
+          <a href="/<%= section.display_slug %>">
+            <%= currentLang === 'mr' && section.name_mr 
+      ? section.name_mr 
+      : section.name %>
+
+          </a>
+
+          <% if (subSectionsBySection && subSectionsBySection[section.id]) { %>
+            <div class="nav-dropdown-menu">
+              <% subSectionsBySection[section.id].forEach(sub => { %>
+                <a href="/<%= section.display_slug %>/<%= sub.display_slug %>">
+                  <%= currentLang === 'mr' && sub.name_mr 
+      ? sub.name_mr 
+      : sub.name %>
+
+                </a>
+              <% }) %>
+            </div>
+          <% } %>
+        </li>
+
+      <% }) %>
+    <% } %>
+
+    <!-- STATIC LINKS -->
+
+
+    <li class="hide-mobile">
+  <a href="/become_dealer"><%= __('become_dealer') %></a>
+</li>
+
+    <li class="hide-mobile">
+  <a href="/contact"><%= __('contact') %></a>
+</li>
+  </ul>
+</div>
+<script>
+const input = document.getElementById("searchInput");
+const dropdown = document.getElementById("searchDropdown");
+const searchBox = document.querySelector(".search-box");
+
+if (input && dropdown) {
+
+  /* =========================
+     SEARCH TYPING
+  ========================= */
+  input.addEventListener("keyup", async () => {
+
+    const q = input.value.trim();
+
+    if (q.length < 2) {
+      dropdown.style.display = "none";
+      dropdown.innerHTML = "";
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+
+      dropdown.innerHTML = "";
+
+      if (!data.length) {
+        dropdown.style.display = "none";
+        return;
+      }
+
+      dropdown.style.display = "block";
+
+      data.forEach(item => {
+        dropdown.innerHTML += `
+          <a href="/product/${item.display_slug}" class="search-item">
+            <img src="/uploads/${item.image}" />
+            <div>
+              <div class="name">${item.product_name}</div>
+              <div class="price">₹ ${item.price}</div>
+            </div>
+          </a>
+        `;
+      });
+
+    } catch (err) {
+      console.error(err);
+      dropdown.style.display = "none";
+    }
+
+  });
+
+
+  /* =========================
+     CLICK OUTSIDE → CLOSE
+  ========================= */
+  document.addEventListener("click", function (e) {
+
+    if (!searchBox.contains(e.target)) {
+      dropdown.style.display = "none";
+    }
+
+  });
+
+
+  /* =========================
+     PREVENT CLOSE WHEN CLICK INSIDE
+  ========================= */
+  dropdown.addEventListener("click", function (e) {
+    e.stopPropagation();
+  });
+
+}
+</script>
+
+
+<!-- cart chi js ahe start -->
+<script>
+/* ==========================================
+   AutoKart Reliable Cart Badge (Fix)
+========================================== */
+
+const cartBadge = document.getElementById("cart-count");
+
+async function fetchCartCount() {
+  try {
+    const res = await fetch("/cart-count", {
+      cache: "no-store",
+      credentials: "same-origin"
+    });
+
+    const data = await res.json();
+    const count = Number(data.count) || 0;
+
+    if (!cartBadge) return;
+
+    if (count > 0) {
+      cartBadge.textContent = count;
+      cartBadge.style.display = "inline-flex";
+    } else {
+      cartBadge.style.display = "none";
+    }
+
+  } catch (e) {
+    console.error("Cart fetch failed", e);
+  }
+}
+
+/* ---------- KEY FIX ---------- */
+/* Wait for session + MySQL to settle */
+function initCartBadge() {
+
+  // First fetch (after render)
+  setTimeout(fetchCartCount, 300);
+
+  // Second fetch (guarantees accuracy)
+  setTimeout(fetchCartCount, 800);
+}
+
+/* Run on every page */
+document.addEventListener("DOMContentLoaded", initCartBadge);
+
+/* Re-check when user returns to tab */
+window.addEventListener("focus", fetchCartCount);
+</script>
+
+
+<script>
+/* ===============================
+   CLOSE MOBILE MENU ON OUTSIDE CLICK
+================================ */
+document.addEventListener("click", function(e) {
+
+  if (window.innerWidth > 768) return; // only mobile
+
+  const clickedInsideMenu = e.target.closest(".nav-dropdown");
+
+  if (!clickedInsideMenu) {
+    document.querySelectorAll(".nav-dropdown").forEach(item => {
+      item.classList.remove("active");
+    });
+  }
+
+});
+</script>
+<script>
+function toggleLangMenu() {
+  const menu = document.getElementById("langMenu");
+  menu.classList.toggle("show");
+}
+
+function changeLang(lang) {
+  window.location.href = `/set-language/${lang}`;
+}
+document.addEventListener("click", function(event) {
+  const wrapper = document.querySelector(".lang-wrapper");
+  const menu = document.getElementById("langMenu");
+
+  if (wrapper && !wrapper.contains(event.target)) {
+    menu.classList.remove("show");
+  }
+});
+</script>
+<!-- mobeil veiw sub sesstion on  -->
+<script>
+document.querySelectorAll(".nav-dropdown > a").forEach(link => {
+
+  link.addEventListener("click", function(e) {
+
+    if (window.innerWidth <= 768) {
+
+      const parent = this.parentElement;
+
+      if (parent.querySelector(".nav-dropdown-menu")) {
+
+        e.preventDefault();
+
+        document.querySelectorAll(".nav-dropdown").forEach(item => {
+          if (item !== parent) {
+            item.classList.remove("active");
+          }
+        });
+
+        parent.classList.toggle("active");
+      }
+    }
+
+  });
+
+});
+</script>
+
+<!-- Close dropdowns on scroll -->
+<script>
+// Close dropdowns when scrolling
+window.addEventListener('scroll', function() {
+  // For desktop - remove hover state
+  if (window.innerWidth > 768) {
+    document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+      dropdown.classList.remove('active');
+    });
+  } else {
+    // For mobile - close any open dropdowns
+    document.querySelectorAll('.nav-dropdown.active').forEach(dropdown => {
+      dropdown.classList.remove('active');
+    });
+  }
+});
+
+// Mobile view sub section toggle
+document.querySelectorAll(".nav-dropdown > a").forEach(link => {
+  link.addEventListener("click", function(e) {
+    if (window.innerWidth <= 768) {
+      const parent = this.parentElement;
+      if (parent.querySelector(".nav-dropdown-menu")) {
+        e.preventDefault();
+        document.querySelectorAll(".nav-dropdown").forEach(item => {
+          if (item !== parent) {
+            item.classList.remove("active");
+          }
+        });
+        parent.classList.toggle("active");
+      }
+    }
+  });
+});
+
+document.querySelectorAll(".nav-dropdown > a").forEach(item => {
+  item.addEventListener("click", function(e) {
+    e.stopPropagation();
+    this.parentElement.classList.toggle("active");
+  });
+});
+
+document.addEventListener("click", function() {
+  document.querySelectorAll(".nav-dropdown").forEach(d => {
+    d.classList.remove("active");
+  });
+});
+
+
+
+
+
+
+async function refreshCartCount() {
+
+  try {
+    const res = await fetch("/cart-count", {
+      cache: "no-store",
+      credentials: "same-origin"
+    });
+
+    const data = await res.json();
+
+    const badge = document.getElementById("cart-count");
+    if (!badge) return;
+
+    if (data.count > 0) {
+      badge.textContent = data.count;
+      badge.style.display = "inline-flex";
+    } else {
+      badge.style.display = "none";
+    }
+
+  } catch (err) {
+    console.error("Cart count error:", err);
+  }
+
+}
+
+// Call refreshCartCount when DOM is loaded
+document.addEventListener("DOMContentLoaded", refreshCartCount);
+</script>

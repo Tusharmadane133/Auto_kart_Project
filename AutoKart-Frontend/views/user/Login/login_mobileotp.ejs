@@ -1,0 +1,376 @@
+<%- include('../partials/header') %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | AutoKart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#f1f3f6;
+}
+
+/* ================= LOGIN CARD ================= */
+.login-wrapper{
+  width:800px;
+  margin:50px auto;
+  display:flex;
+  background:#fff;
+  box-shadow:0 2px 10px rgba(0,0,0,.15);
+  border-radius:4px;
+  overflow:hidden;
+}
+
+/* LEFT PANEL */
+.login-left{
+  width:40%;
+  background:#2874f0;
+  color:#fff;
+  padding:40px 30px;
+}
+.login-left h2{
+  font-size:28px;
+  margin-bottom:15px;
+}
+.login-left p{
+  font-size:16px;
+  line-height:1.6;
+}
+.login-left img{
+  width:100%;
+  margin-top:40px;
+}
+
+/* RIGHT PANEL */
+.login-right{
+  width:60%;
+  padding:40px;
+}
+
+.login-right label{
+  font-size:14px;
+  color:#555;
+}
+
+.login-right input{
+  width:100%;
+  padding:10px 5px;
+  margin-top:10px;
+  border:none;
+  border-bottom:2px solid #2874f0;
+  outline:none;
+  font-size:16px;
+}
+
+.terms{
+  font-size:12px;
+  color:#777;
+  margin:20px 0;
+}
+
+/* BUTTON */
+.otp-btn{
+  width:100%;
+  background:#fb641b;
+  color:#fff;
+  border:none;
+  padding:12px;
+  font-size:16px;
+  border-radius:2px;
+  cursor:pointer;
+}
+
+/* LINK */
+.login-link{
+  display:block;
+  text-align:center;
+  margin-top:15px;
+  color:#2874f0;
+  font-size:14px;
+  text-decoration:none;
+}
+
+/* OTP SLIDE */
+#otpBox{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.5s ease;
+}
+#otpBox.show{
+  max-height:200px;
+}
+
+/* ================= TABLET VIEW ================= */
+@media (max-width: 991px){
+  .login-wrapper{
+    width:90%;
+  }
+  .login-left{
+    padding:30px 20px;
+  }
+  .login-left h2{
+    font-size:24px;
+  }
+}
+
+/* ================= MOBILE VIEW ================= */
+@media (max-width: 576px){
+  body{
+    background:#fff;
+  }
+
+  .login-wrapper{
+    width:100%;
+    margin:0;
+    flex-direction:column;
+    box-shadow:none;
+    border-radius:0;
+  }
+
+  /* Hide left blue section */
+  .login-left{
+    display:none;
+  }
+
+  .login-right{
+    width:100%;
+    padding:30px 20px;
+  }
+
+  .login-right input{
+    font-size:18px;
+  }
+
+  .otp-btn{
+    font-size:18px;
+    padding:14px;
+  }
+}
+
+
+
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+    body{background:#f1f3f6}
+
+    .topbar{background:#2874f0;padding:12px 30px;display:flex;align-items:center;color:#fff}
+    .logo img{height:40px}
+    .search{flex:1;margin:0 20px}
+    .search input{width:100%;padding:8px;border:none;border-radius:2px}
+    .nav-right{display:flex;gap:20px;font-size:14px;align-items:center}
+
+    .login-wrapper{width:800px;margin:40px auto;display:flex;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+    .login-left{width:40%;background:#2874f0;color:#fff;padding:40px 30px}
+    .login-left h2{font-size:28px;margin-bottom:20px}
+    .login-left p{font-size:16px;line-height:1.6}
+    .login-left img{width:100%;margin-top:40px}
+
+    .login-right{width:60%;padding:40px}
+    .login-right label{font-size:14px;color:#555}
+    .login-right input{
+      width:100%;
+      padding:10px 0;
+      margin-top:10px;
+      border:none;
+      border-bottom:1px solid #2874f0
+    }
+    .terms{font-size:12px;color:#777;margin:20px 0}
+    .otp-btn{width:100%;background:#fb641b;color:#fff;border:none;padding:12px;margin-top:15px;cursor:pointer}
+
+    /* OTP form hidden with animation */
+    #otpBox{
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+    }
+    #otpBox.show{
+      max-height: 200px; /* enough height to show input and button */
+    }
+
+    @media(max-width:850px){
+      .login-wrapper{width:95%;flex-direction:column}
+      .login-left,.login-right{width:100%}
+    }
+    /* ================= MOBILE HEADER ONLY LOGO ================= */
+@media (max-width: 576px) {
+
+  /* Top header center */
+  .top-navbar,
+  .topbar {
+    justify-content: center;
+    /* justify-content: none !important; */
+    padding: 10px 12px;
+  }
+
+  /* Show only logo */
+  .logo {
+    margin: 0 auto;
+  }
+
+  .logo img {
+    height: 38px;
+  }
+
+  /* REMOVE search box */
+  .search,
+  .search-box {
+    display: none !important;
+  }
+
+  /* REMOVE login, cart, actions */
+  .top-actions,
+  .nav-right,
+  .action-item,
+  .login,
+  .cart {
+    display: none !important;
+  }
+}
+
+/* menu bar hide  */
+
+  /* ================= MOBILE MENU FILTER ================= */
+@media (max-width: 576px) {
+
+  /* Hide all menu items first */
+  .menu-navbar ul li {
+    display: none;
+  }
+
+  /* Show only required items */
+  .menu-navbar ul li.home,
+  .menu-navbar ul li.shop,
+  .menu-navbar ul li.category,
+  .menu-navbar ul li.electronics {
+    display: inline-block;
+  }
+
+  /* Align in one row */
+  .menu-navbar ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+}
+ 
+/* menu end bar hide  */ 
+    
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+<!-- <header class="topbar">
+  <div class="logo">
+    <img src="/uploads/autokart_logo.jpeg" alt="AutoKart Logo">
+  </div>
+  <div class="search">
+    <input placeholder="Search for products">
+  </div>
+  <div class="nav-right">
+    <span>Login</span>
+    <span>Seller</span>
+    <span>More</span>
+  </div>
+</header> -->
+
+<div class="login-wrapper">
+  <div class="login-left">
+    <h2>Login</h2>
+    <p>Get access to Orders, Wishlist & Recommendations</p>
+    <img src="https://img.freepik.com/free-vector/login-concept-illustration_114360-739.jpg" alt="Login Illustration">
+  </div>
+
+  <div class="login-right">
+
+    <!-- MOBILE FORM -->
+    <form id="mobileForm">
+      <label>Enter Mobile number</label>
+      <input type="text" name="mobile" maxlength="10"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'')" required autocomplete="off">
+      <div class="terms">By continuing, you agree to AutoKart policy</div>
+      <button class="otp-btn" type="submit">Request OTP</button>
+
+ <a href="/register" class="login-link">
+  New to AutoKart? Create an account
+</a>
+
+    </form>
+
+    <!-- OTP FORM -->
+    <form id="otpBox">
+      <label>Enter OTP</label>
+      <input type="text" name="otp" maxlength="6"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'')" required autocomplete="off">
+      <button class="otp-btn" type="submit">Verify OTP</button>
+    </form>
+
+  </div>
+</div>
+
+
+
+
+
+<script>
+const mobileForm = document.getElementById("mobileForm");
+const otpBox = document.getElementById("otpBox");
+
+mobileForm.addEventListener("submit", async e => {
+  e.preventDefault();
+
+  // Smooth show OTP box
+  otpBox.classList.add("show");
+  mobileForm.style.display = "none";
+
+  const mobile = e.target.mobile.value;
+  try {
+    const res = await fetch("/send-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mobile })
+    });
+    const msg = await res.text();
+    alert(msg);
+  } catch(err) {
+    console.error(err);
+    alert("Failed to send OTP");
+  }
+});
+
+otpBox.addEventListener("submit", async e => {
+  e.preventDefault();
+  const otp = e.target.otp.value;
+
+  try {
+    const res = await fetch("/verify-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ otp })
+    });
+    const msg = await res.text();
+    alert(msg);
+    if(msg === "Login Success"){
+      window.location.href = "/my_profile";
+    }
+  } catch(err) {
+    console.error(err);
+    alert("Failed to verify OTP");
+  }
+});
+</script>
+
+</body>
+</html>

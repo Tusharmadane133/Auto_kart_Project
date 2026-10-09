@@ -1,0 +1,817 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* ===============================
+   TOP NAVBAR
+================================ */
+.top-navbar {
+  display: flex;
+  align-items: center;
+  padding: 10px 40px;
+  height: 60px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+
+  position: relative;
+  z-index: 10001;   /* 🔥 MUST BE ABOVE menu-navbar */
+}
+
+
+
+
+.logo {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.logo img {
+  height: 40px;        /* 🔥 controlled height */
+  display: block;      /* 🔥 removes inline gap */
+}
+
+
+/* ===============================
+   SEARCH
+================================ */
+
+.search-box {
+  flex: 1;
+  max-width: 650px;     /* 🔥 CONTROLLED WIDTH */
+   margin: 0 30px;
+  display: flex;
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  height: 40px;
+  padding: 0 50px 0 15px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  outline: none;
+}
+
+.search-box button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60px;
+  height: 100%;
+  border: none;
+  background: #2874f0;         /* Flipkart blue */
+  color: #fff;
+  cursor: pointer;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  display: none;
+  z-index: 9999;
+}
+
+.search-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  text-decoration: none;
+  color: #000;
+}
+
+.search-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.search-item:hover {
+  background: #f1f3f6;
+}
+
+
+.search-item .name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212121;
+}
+
+.search-item .price {
+  font-size: 13px;
+  color: #388e3c;
+}
+
+
+/* ===============================
+   ACTIONS
+================================ */
+
+.top-actions {
+  margin-left: auto;     /* 🔥 THIS pushes it to the right edge */
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
+/* ===============================
+   BLOG SHORTCUT (Top Right Icon)
+================================ */
+.blog-shortcut a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 6px;
+  color: #333;
+  text-decoration: none;
+
+  transition: 0.2s ease;
+}
+
+.blog-shortcut a:hover {
+  background: #f1f3f6;
+  color: #2874f0;
+}
+
+.blog-shortcut i {
+  font-size: 16px;
+}
+/* ===============================
+   SECOND NAVBAR
+================================ */
+
+.menu-navbar {
+  background-color: #1f212b;
+  position: relative;
+  z-index: 3000;
+}
+
+
+.menu-navbar ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+}
+
+.menu-navbar ul li {
+  padding: 14px 18px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* kill default anchor behavior */
+.menu-navbar a {
+  color: #ffffff;
+  text-decoration: none;
+  display: block;
+}
+
+.menu-navbar ul li:hover,
+.menu-navbar ul li.active {
+  background-color: #111;
+}
+
+/* ===============================
+   DROPDOWN
+================================ */
+
+.dropdown {
+  position: relative;
+}
+
+/* isolate dropdown from layout */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  background: #ffffff;
+  min-width: 260px;
+
+  display: none;
+  flex-direction: column;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 9999;
+
+  /* prevent stretch / overlay bugs */
+  white-space: normal;
+}
+
+/* ===== LOGIN DROPDOWN ITEMS FIX ===== */
+.top-actions .dropdown-menu a {
+  display: block;              /* 🔥 one below another */
+  width: 100%;
+
+  padding: 10px 16px;
+
+  text-decoration: none;       /* 🔥 remove underline */
+  color: #212121;
+  font-size: 14px;
+  font-weight: 500;
+
+  border-bottom: 1px solid #eee;
+}
+
+/* remove last line */
+.top-actions .dropdown-menu a:last-child {
+  border-bottom: none;
+}
+
+/* hover effect like Amazon */
+.top-actions .dropdown-menu a:hover {
+  background-color: #f1f3f6;
+}
+
+
+.dropdown-menu a:hover {
+  background: #f1f1f1;
+}
+
+.dropdown:hover > .dropdown-menu {
+  display: flex;
+}
+
+/* ===============================
+   MEGA MENU (SAFE & FINAL)
+================================ */
+
+/* parent anchor */
+.mega-dropdown {
+  position: relative;
+}
+
+/* mega menu panel */
+.mega-dropdown > .mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 1000px;
+  max-width: calc(100vw - 40px);   /* 🔥 prevent overflow */
+
+  background: #ffffff;
+  padding: 20px;
+
+  display: none;                   /* 🔥 hidden by default */
+  visibility: hidden;              /* 🔥 no layout bleed */
+  opacity: 0;
+
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  z-index: 10000;
+
+  gap: 30px;
+}
+
+/* show only when parent is hovered */
+.mega-dropdown:hover > .mega-menu {
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* columns */
+.mega-column {
+  flex: 1;
+  min-width: 180px;
+}
+
+/* column headings */
+.mega-column h4 {
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: #2874f0;
+  font-weight: 600;
+}
+
+/* links */
+.mega-column a {
+  display: block;
+  padding: 6px 0;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+}
+
+/* hover */
+.mega-column a:hover {
+  color: #2874f0;
+  text-decoration: underline;
+}
+
+
+/* ===============================
+   CART
+================================ */
+.cart-link,
+.cart-link:visited,
+.cart-link:hover,
+.cart-link:active {
+  color: #000000; /* keep your cart color */
+  text-decoration: none;
+}
+
+.cart-link i {
+  color: inherit;
+}
+
+
+/* ======================================
+   LOGIN DROPDOWN — FINAL FIX
+====================================== */
+
+/* anchor login dropdown */
+.top-actions .dropdown {
+  position: relative;
+}
+
+/* override generic dropdown-menu */
+.top-actions .dropdown-menu {
+  left: auto !important;   /* 🔥 cancel global left:0 */
+  right: 0;                /* 🔥 align under Login */
+
+  top: 100%;
+  min-width: 180px;
+
+  display: none;
+  flex-direction: column;
+
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 10000;
+}
+
+/* show on hover */
+.top-actions .dropdown:hover > .dropdown-menu {
+  display: flex;
+}
+/* ===============================
+   CATEGORY / NAV DROPDOWN
+================================ */
+
+/* parent */
+.nav-dropdown {
+  position: relative;
+}
+
+/* dropdown panel */
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  min-width: 240px;
+  background-color: #ffffff;
+
+  display: none;
+  flex-direction: column;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+}
+
+/* Show dropdown when parent has active class */
+.nav-dropdown.active .nav-dropdown-menu {
+  display: block;
+}
+
+/* desktop hover behavior */
+.nav-dropdown:hover > .nav-dropdown-menu {
+  display: block;
+}
+
+/* dropdown links */
+.nav-dropdown-menu a {
+  display: block;
+  padding: 10px 14px;
+
+  font-size: 14px;
+  color: #212121;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* hover effect */
+.nav-dropdown-menu a:hover {
+  background-color: #f1f3f6;
+}
+
+
+
+.lang-dropdown {
+  margin-left: 15px;
+}
+
+/*lanuage dropdown*/
+
+
+.lang-wrapper {
+  position: relative;
+  display: inline-block;
+  font-size: 14px;
+}
+
+/* Button */
+.lang-selected {
+  background: #fff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s ease;
+}
+
+.lang-selected:hover {
+  border-color: #ff6600;
+}
+
+/* Dropdown */
+.lang-menu {
+  display: none;
+  position: absolute;
+  top: 100%;      /* Exactly below button */
+  left: 0;        /* Align with button */
+  width: 100%;    /* Same width as button */
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  padding: 8px 0;
+  margin-top: 4px;
+  z-index: 999;
+}
+
+/* Show */
+.lang-menu.show {
+  display: block;
+}
+
+/* Options */
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.lang-option:hover {
+  background: #f5f5f5;
+}
+
+.lang-option input {
+  accent-color: #ff6600;
+}
+
+
+/* ==================================================
+   AMAZON-STYLE MOBILE HEADER (FINAL FIXED CLEAN)
+================================================== */
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* iPhone safe area fix */
+body {
+  padding-top: env(safe-area-inset-top);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+
+  /* ================= TOP NAVBAR ================= */
+ .top-navbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 6px 10px;
+    height: auto;
+  }
+/* ===== FIX HEADER ROW STRUCTURE ===== */
+
+
+  /* ===== LOGO ===== */
+  .logo {
+    flex: 0 0 auto;
+  }
+
+  .logo img {
+    height: 34px;
+    width: auto;
+  }
+
+  /* ===== ACTION ICONS ===== */
+  .top-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .action-item span {
+  display: inline;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+.blog-shortcut a {
+  width: 26px;
+  height: 26px;
+}
+
+.blog-shortcut i {
+  font-size: 14px;
+}
+
+/* ===== MOBILE LANGUAGE BUTTON FIX ===== */
+.lang-wrapper {
+  font-size: 12px;           /* shrink text scale */
+}
+
+.lang-selected {
+  padding: 3px 8px;          /* reduce box size */
+  font-size: 12px;
+  border-radius: 4px;
+  gap: 4px;
+  height: 26px;              /* force compact height */
+  line-height: 1;
+}
+
+/* globe icon size */
+.lang-selected i,
+.lang-selected svg {
+  font-size: 11px;
+}
+
+/* dropdown also smaller */
+.lang-menu {
+  font-size: 12px;
+}
+
+.lang-option {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+  /* ===== SEARCH BAR FULL WIDTH ===== */
+  .search-box {
+  margin: 6px 0 0 0 !important;   /* kill desktop 30px margin */
+}
+
+.search-box {
+  order: 10;
+  flex: 0 0 100%;
+  margin-top: 6px;
+  padding: 0;
+}
+
+  .search-box input {
+    height: 36px;
+    border-radius: 6px 0 0 6px;
+  }
+
+  .search-box button {
+    height: 36px;
+    border-radius: 0 6px 6px 0;
+  }
+
+
+.search-box {
+  order: 10;
+  flex: 0 0 100%;
+  margin-top: 6px;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.menu-navbar {
+   position: relative;
+   z-index: 9999;
+}
+
+.menu-navbar ul {
+   display: flex;
+   align-items: center;
+   list-style: none;
+   padding-left: 0;   /* SPACE REMOVE */
+   margin: 0; 
+   margin-left: 30px;        /* extra safe */
+}
+
+.menu-navbar ul li {
+   position: relative;
+   flex: 0 0 auto;
+   padding: 0 8px;    /* thoda reduce kela */
+   font-size: 10px;
+   display: flex;
+   align-items: center;
+   height: 42px;
+
+margin-left: -2px;
+  
+}
+
+.menu-navbar ul li a {
+
+   font-size: 10px;
+}
+.nav-dropdown-menu {
+    position: absolute;
+    top: 100%;
+
+    left: 24vw;
+    transform: translateX(-50%);
+
+    width: 200px;        /* ✅ FIXED WIDTH */
+    max-width: 200px;    /* optional */
+
+    background: #ffffff;
+    border-radius: 10px;
+
+    display: none;
+    flex-direction: column;
+
+    box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+    padding: 6px 0;
+
+    max-height: 65vh;
+    overflow-y: auto;
+    z-index: 100000;
+}
+
+/* 🔥 Gallery special fix */
+.gallery-item .nav-dropdown-menu {
+  left: -10px;
+  /* right: 100px; */
+}
+
+
+.summer-item .nav-dropdown-menu {
+  left: auto;
+  right: -130px;   /* 🔥 adjust inside */
+}
+
+
+.electronics-item .nav-dropdown-menu {
+  left: auto;
+  right: -230px;   /* 🔥 adjust as needed */
+}
+
+
+
+
+/* ===============================
+   MOBILE DROPDOWN ITEM STYLING (CLEAN)
+================================ */
+
+/* container spacing */
+.nav-dropdown-menu{
+    padding: 6px 0;
+    align-items: stretch;
+}
+
+/* each item */
+.nav-dropdown-menu a{
+    display: block;
+    padding: 12px 18px;        /* proper touch size */
+    margin: 0;
+
+    font-size: 15px;           /* readable text */
+    line-height: 1.4;          /* natural spacing */
+
+    color: #212121;
+    text-align: left;
+    white-space: normal;
+
+    border-bottom: 1px solid #f2f2f2;
+}
+
+/* remove border from last */
+.nav-dropdown-menu a:last-child{
+    border-bottom: none;
+}
+
+/* hover / tap feel */
+.nav-dropdown-menu a:active,
+.nav-dropdown-menu a:hover{
+    background: #f5f7fa;
+}
+
+.menu-navbar ul li {
+   margin-left: -2px;
+}
+
+
+.menu-navbar ul {
+   display: flex;
+   justify-content: space-around;   /* distribute items evenly */
+   align-items: center;
+   list-style: none;
+   padding: 0;
+   margin: 0;
+   width: 100%;
+}
+
+.nav-dropdown.active > .nav-dropdown-menu {
+   display: flex;
+}
+
+
+/* ===== SLIDER SAFE ===== */
+
+.fk-slider,
+.slider,
+.swiper {
+   position: relative;
+   z-index: 1 !important;
+   overflow: visible !important;
+}
+
+body {
+   overflow-x: hidden;
+}
+
+/* ================= MOBILE SETTINGS ================= */
+
+@media (max-width:768px){
+
+   /* Hide Become Dealer & Contact */
+   .menu-navbar ul li a[href="/become_dealer"],
+   .menu-navbar ul li a[href="/contact"]{
+      display: none;
+   }
+
+}
+}
+
+
+/* ===============================
+   iPhone 12 Mini Specific Fix
+================================ */
+@media (max-width: 420px){
+
+  /* 🔥 Reduce menu item padding */
+  .menu-navbar ul li{
+     padding: 0 5px !important;   /* horizontal spacing kami */
+     font-size: 11px;
+     margin-left: 2px;
+  }
+
+  
+/* 🔥 Gallery special fix */
+.gallery-item .nav-dropdown-menu {
+  left: -31px;
+  /* right: 100px;30 */
+}
+
+.electronics-item .nav-dropdown-menu {
+  left: auto;
+  right: -200px;   /* 🔥 adjust as needed */
+}
+
+.summer-item .nav-dropdown-menu {
+  left: auto;
+  right: -118px;   /* 🔥 adjust inside */
+}
+
+}

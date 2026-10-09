@@ -1,0 +1,751 @@
+<!-- ===== CHART LIBRARY ===== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+/* ================= THEME ENGINE ================= */
+
+const CHART_PALETTES = [
+  ["#2563eb","#60a5fa","#93c5fd","#1d4ed8"],   // Blue
+  ["#059669","#34d399","#6ee7b7","#047857"],   // Green
+  ["#ea580c","#fb923c","#fdba74","#c2410c"],   // Orange
+  ["#7c3aed","#a78bfa","#c4b5fd","#5b21b6"],   // Purple
+  ["#dc2626","#f87171","#fca5a5","#991b1b"],   // Red
+  ["#0f766e","#5eead4","#99f6e4","#134e4a"]    // Teal
+];
+
+/* Shuffle palettes every reload */
+const SHUFFLED = CHART_PALETTES.sort(()=>0.5-Math.random());
+
+let paletteIndex = 0;
+
+function getPalette(count){
+  const palette = SHUFFLED[paletteIndex % SHUFFLED.length];
+  paletteIndex++;
+
+  const colors = [];
+  for(let i=0;i<count;i++){
+    colors.push(palette[i % palette.length]);
+  }
+  return colors;
+}
+</script>
+<!-- ===== INTERNAL PAGE STYLES ===== -->
+<style>
+
+/* ===== PAGE ===== */
+.overview-title{
+  font-size:22px;
+  font-weight:600;
+  color:#1e293b;
+  margin-bottom:20px;
+}
+
+/* ===== KPI GRID ===== */
+.kpi-wrapper{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:18px;
+  margin-bottom:28px;
+}
+
+/* ===== KPI CARD ===== */
+.kpi-box{
+  background:#ffffff;
+  border-radius:10px;
+  padding:20px 22px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 1px 2px rgba(0,0,0,0.04);
+  position:relative;
+}
+
+/* Accent bar */
+.kpi-box::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  border-radius:10px 0 0 10px;
+  background:var(--theme-color);
+}
+
+.kpi-heading{
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#64748b;
+  margin-bottom:8px;
+}
+
+.kpi-number{
+  font-size:28px;
+  font-weight:700;
+  color:#0f172a;
+}
+
+.kpi-desc{
+  font-size:12px;
+  color:#94a3b8;
+  margin-top:4px;
+}
+
+/* ===== CHART GRID ===== */
+.chart-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:20px;
+}
+
+/* ===== CHART CARD ===== */
+.chart-container{
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  padding:20px;
+}
+
+.chart-title{
+  font-size:15px;
+  font-weight:600;
+  color:#0f172a;
+  margin-bottom:15px;
+}
+
+canvas{
+  max-height:320px;
+}
+
+@media(max-width:900px){
+  .chart-grid{
+    grid-template-columns:1fr;
+  }
+}
+/* ===== SUBSECTION PIE GRID (FIXED 3 PER ROW) ===== */
+.subsection-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);   /* Always 3 */
+  gap:20px;
+  margin-top:20px;
+}
+
+/* Card Layout */
+.subsection-grid .chart-container{
+  height:260px;              /* reduce card height */
+  padding:16px 18px;         /* tighter padding */
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+/* Title smaller so chart gets space */
+.subsection-grid .chart-title{
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:6px;
+}
+
+/* Make canvas take MOST space */
+.subsection-grid canvas{
+  flex:1 !important;
+  max-height:200px !important;
+}
+
+
+#monthlySalesChart{
+  height:300px !important;
+}
+.dual-chart-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-top:20px;
+}
+
+
+/* ===== HEADER (TITLE + FILTER) ===== */
+.overview-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+}
+
+/* ===== FILTER BAR ===== */
+.date-filter{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#ffffff;
+  padding:8px 10px;
+  border:1px solid #e5e7eb;
+  border-radius:8px;
+  box-shadow:0 1px 2px rgba(0,0,0,0.04);
+}
+
+/* dropdown */
+.date-filter select{
+  border:none;
+  background:#f8fafc;
+  padding:6px 10px;
+  border-radius:6px;
+  font-size:13px;
+  color:#0f172a;
+}
+
+/* date input */
+.date-filter input{
+  border:1px solid #e2e8f0;
+  padding:5px 8px;
+  border-radius:6px;
+  font-size:13px;
+  background:#ffffff;
+}
+
+/* "to" separator */
+.range-sep{
+  font-size:12px;
+  color:#64748b;
+  margin:0 2px;
+}
+
+/* button */
+.date-filter button{
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  padding:6px 14px;
+  border-radius:6px;
+  font-size:13px;
+  cursor:pointer;
+ 
+}
+
+.date-filter button:hover{
+  background:#1d4ed8;
+}
+
+
+</style>
+
+
+<%
+const safeStats = stats || {
+  deliveredOrders: 0,
+  totalUsers: 0,
+  totalItemsSold: 0,
+  totalRevenue: 0
+};
+%>
+
+<div class="overview-header">
+
+  <div class="overview-title">Business Overview</div>
+
+  <form id="dateFilterForm" method="GET" action="/admin/overview" class="date-filter">
+    
+    <select id="preset" name="preset">
+      <option value="year">This Year</option>
+      <option value="today">Today</option>
+      <option value="week">This Week</option>
+      <option value="month">This Month</option>
+      <option value="">Custom</option>
+    </select>
+
+    <input type="date" name="from" id="fromDate">
+    <span class="range-sep">to</span>
+    <input type="date" name="to" id="toDate">
+
+    <button type="submit">Apply</button>
+
+  </form>
+
+</div>
+
+
+<!-- ===== KPI CARDS ===== -->
+<div class="kpi-wrapper">
+
+  <div class="kpi-box">
+    <div class="kpi-heading">Delivered Orders</div>
+    <div class="kpi-number"><%= safeStats.deliveredOrders %></div>
+    <div class="kpi-desc">Completed successfully</div>
+  </div>
+
+  <div class="kpi-box">
+    <div class="kpi-heading">Total Users</div>
+    <div class="kpi-number"><%= safeStats.totalUsers %></div>
+    <div class="kpi-desc">Registered customers</div>
+  </div>
+
+  <div class="kpi-box">
+    <div class="kpi-heading">Items Sold</div>
+    <div class="kpi-number"><%= safeStats.totalItemsSold %></div>
+    <div class="kpi-desc">Total quantity delivered</div>
+  </div>
+
+  <div class="kpi-box">
+    <div class="kpi-heading">Total Revenue</div>
+    <div class="kpi-number">₹ <%= safeStats.totalRevenue %></div>
+    <div class="kpi-desc">From delivered products</div>
+  </div>
+
+</div>
+
+
+
+
+
+<!-- ===== MONTHLY SALES CHART ===== -->
+ <div class="dual-chart-row">
+
+  <div class="chart-container">
+    <div class="chart-title">Revenue Overview (This Year)</div>
+    <canvas id="monthlySalesChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <div class="chart-title">Items Sold (Monthly)</div>
+    <canvas id="itemsLineChart"></canvas>
+  </div>
+
+</div>
+
+  
+<div class="dual-chart-row">
+
+  <!-- LEFT : PIE -->
+  <div class="chart-container">
+    <h3>Sales Contribution by Section</h3>
+    <canvas id="sectionPieChart"></canvas>
+  </div>
+
+  <!-- RIGHT : USERS LINE -->
+  <div class="chart-container">
+    <h3>User Growth (Monthly)</h3>
+    <canvas id="usersLineChart"></canvas>
+  </div>
+
+</div>
+
+
+<div class="subsection-grid">
+  <% subsectionCharts.forEach((chart, index) => { %>
+
+    <div class="chart-container">
+      <div class="chart-title"><%= chart.section %> Breakdown</div>
+      <canvas id="subChart_<%= index %>"></canvas>
+    </div>
+
+  <% }) %>
+</div>
+
+<!-- ===== CHART SCRIPT ===== -->
+<script>
+const monthLabels = JSON.parse('<%- JSON.stringify(charts.months || []) %>');
+const monthSales  = JSON.parse('<%- JSON.stringify(charts.sales  || []) %>');
+const statusData  = JSON.parse('<%- JSON.stringify(charts.status || []) %>');
+const monthUsers = JSON.parse('<%- JSON.stringify(charts.users || []) %>');
+const monthItems = JSON.parse('<%- JSON.stringify(charts.items || []) %>');
+
+
+const ctx = document.getElementById("monthlySalesChart").getContext("2d");
+
+/* ---- Force Pure White Canvas ---- */
+const cleanBackground = {
+  id: 'cleanBackground',
+  beforeDraw: (chart) => {
+    const {ctx, chartArea} = chart;
+    if (!chartArea) return;
+
+    ctx.save();
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(
+      chartArea.left,
+      chartArea.top,
+      chartArea.right - chartArea.left,
+      chartArea.bottom - chartArea.top
+    );
+    ctx.restore();
+  }
+};
+
+new Chart(ctx, {
+  type: "bar",
+
+  data: {
+    labels: monthLabels,
+    datasets: [{
+      label: "Revenue",
+      data: monthSales,
+      backgroundColor: getPalette(1)[0],
+
+      borderRadius: 6
+    }]
+  },
+
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+
+    plugins: {
+      legend: { display:false },
+      tooltip: {
+        backgroundColor:"#111827",
+        titleColor:"#fff",
+        bodyColor:"#e5e7eb",
+        callbacks:{
+          label:(ctx)=>"Revenue: ₹ " + ctx.raw
+        }
+      }
+    },
+
+    scales: {
+      x: {
+        grid:{ display:false },
+        border:{ display:false },
+        ticks:{ color:"#6b7280" }
+      },
+      y: {
+        beginAtZero:true,
+        grid:{ display:false },
+        border:{ display:false },
+        ticks:{ color:"#6b7280" }
+      }
+    }
+  },
+
+  plugins: [cleanBackground]   // ✅ MUST BE HERE (ROOT LEVEL)
+});
+
+/* ================= USER GROWTH LINE ================= */
+new Chart(document.getElementById("usersLineChart"), {
+  type: "bar",
+
+  data: {
+    labels: monthLabels,
+    datasets: [{
+      label: "New Users",
+      data: monthUsers,
+      backgroundColor: getPalette(1)[0],
+
+      barThickness: 20,
+      maxBarThickness: 20,
+      categoryPercentage: 0.4,
+      barPercentage: 0.5,
+
+      borderRadius: 3
+    }]
+  },
+
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{ legend:{ display:false } },
+
+    scales:{
+      x:{
+        grid:{ display:false },
+        border:{ display:false },
+        ticks:{ color:"#6b7280" }
+      },
+      y:{
+        beginAtZero:true,
+        grid:{ display:false },
+        border:{ display:false },
+        ticks:{ color:"#6b7280", precision:0 }
+      }
+    }
+  }
+});
+
+
+
+
+new Chart(document.getElementById("itemsLineChart"), {
+  type: "line",
+
+  data: {
+    labels: monthLabels,
+    datasets: [{
+      label: "Items Sold",
+      data: monthItems,
+      borderColor: getPalette(1)[0],
+      backgroundColor: "transparent",
+      tension: 0.4,
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      spanGaps: false   // 🔥 THIS prevents fake connection over nulls
+    }]
+  },
+
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{ legend:{ display:false } },
+
+    scales:{
+      x:{ grid:{ display:false }, border:{ display:false }},
+      y:{ beginAtZero:true, grid:{ display:false }, border:{ display:false }}
+    }
+  }
+});
+
+
+
+new Chart(document.getElementById("orderStatusChart"), {
+  type: "doughnut",
+  data: {
+    labels: ["Delivered", "Pending", "Cancelled"],
+    datasets: [{
+      data: statusData
+    }]
+  }
+});
+
+
+
+
+const sectionLabels = JSON.parse('<%- JSON.stringify(charts.sections || []) %>');
+const sectionCounts = JSON.parse('<%- JSON.stringify(charts.sectionCounts || []) %>');
+
+new Chart(document.getElementById("sectionPieChart"), {
+  type: "pie",
+  data: {
+    labels: sectionLabels,
+    datasets: [{
+  data: sectionCounts,
+backgroundColor: getPalette(sectionCounts.length),
+  borderWidth: 0
+}]
+
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "right"
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const total = context.dataset.data.reduce((a,b)=>a+b,0);
+            const value = context.raw;
+            const percent = ((value/total)*100).toFixed(1);
+            return `${context.label}: ${percent}% (${value} orders)`;
+          }
+        }
+      }
+    }
+  }
+});
+
+</script>
+
+
+
+
+<script>
+const fromInput = document.getElementById("fromDate");
+const toInput   = document.getElementById("toDate");
+
+/* ===============================
+   WHEN FROM DATE CHANGES
+=============================== */
+fromInput.addEventListener("change", function () {
+
+  if (!this.value) return;
+
+  // 1️⃣ Prevent selecting TO before FROM
+  toInput.min = this.value;
+
+  // 2️⃣ If TO already selected but invalid → auto-fix it
+  if (toInput.value && toInput.value < this.value) {
+    toInput.value = this.value;
+  }
+});
+
+
+/* ===============================
+   WHEN TO DATE CHANGES
+=============================== */
+toInput.addEventListener("change", function () {
+
+  if (!this.value) return;
+
+  // Prevent selecting FROM after TO
+  fromInput.max = this.value;
+
+  if (fromInput.value && fromInput.value > this.value) {
+    fromInput.value = this.value;
+  }
+});
+
+
+/* ===============================
+   ON PAGE LOAD (IMPORTANT)
+   Restore validation after reload
+=============================== */
+window.addEventListener("load", function(){
+
+  if(fromInput.value){
+    toInput.min = fromInput.value;
+  }
+
+  if(toInput.value){
+    fromInput.max = toInput.value;
+  }
+
+});
+</script>
+
+
+
+<script>
+
+const subsectionCharts = JSON.parse('<%- JSON.stringify(subsectionCharts || []) %>');
+
+subsectionCharts.forEach((chart, index) => {
+
+ const colors = getPalette(chart.data.length);
+
+
+  new Chart(document.getElementById(`subChart_${index}`), {
+    type: "doughnut",   // 👈 better visual than plain pie
+    data: {
+      labels: chart.labels,
+      datasets: [{
+        data: chart.data,
+        backgroundColor: colors,
+        borderColor: "#ffffff",
+        borderWidth: 2,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+  maintainAspectRatio:false,
+
+  cutout:"50%",      // thinner hole = bigger donut
+  radius:"95%",      // force donut to expand
+
+  layout:{
+    padding:4        // remove internal whitespace
+  },
+
+  plugins:{
+    legend:{
+      position:"right",
+
+      labels:{
+        boxWidth:10,     // smaller bullet
+        boxHeight:10,
+        padding:10,
+
+        font:{
+          size:11        // 👈 reduce text size (important)
+        }
+      }
+    },
+
+    tooltip:{
+      callbacks:{
+        label:function(ctx){
+          const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+          const value = ctx.raw;
+          const pct = ((value/total)*100).toFixed(1);
+          return `${ctx.label}: ${pct}% (${value})`;
+        }
+      }
+    }
+  }
+}
+
+  });
+
+});
+</script>
+<script>
+/* ---------- Helper: Format Date in IST-safe way ---------- */
+function formatLocalDate(date){
+  const year  = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day   = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;   // YYYY-MM-DD
+}
+
+
+/* ---------- Preset Change Handler ---------- */
+document.getElementById("preset").addEventListener("change", function(){
+
+  const now = new Date();   // current time
+  let from = null;
+  let to   = null;
+
+  /* ---- TODAY ---- */
+  if(this.value === "today"){
+    from = new Date(now);
+    to   = new Date(now);
+  }
+
+  /* ---- THIS WEEK (Monday → Today) ---- */
+  if(this.value === "week"){
+    const current = new Date(now); // clone (avoid mutation)
+
+    const day = current.getDay();  // 0=Sun,1=Mon...
+    const mondayOffset = (day === 0 ? -6 : 1 - day);
+
+    from = new Date(current);
+    from.setDate(current.getDate() + mondayOffset);
+
+    to = new Date(now);
+  }
+
+  /* ---- THIS MONTH ---- */
+  if(this.value === "month"){
+    from = new Date(now.getFullYear(), now.getMonth(), 1);
+    to   = new Date(now);
+  }
+  
+  /* ---- THIS YEAR ---- */
+if(this.value === "year"){
+  from = new Date(now.getFullYear(), 0, 1);   // Jan 1
+  to   = new Date(now.getFullYear(), 11, 31); // Dec 31
+}
+
+  /* ---- Apply to Inputs ---- */
+  if(from && to){
+    document.getElementById("fromDate").value = formatLocalDate(from);
+    document.getElementById("toDate").value   = formatLocalDate(to);
+  }
+});
+
+
+/* ---------- Restore Values After Page Reload ---------- */
+const urlParams = new URLSearchParams(window.location.search);
+
+if(urlParams.get("from")){
+  document.getElementById("fromDate").value = urlParams.get("from");
+}
+
+if(urlParams.get("to")){
+  document.getElementById("toDate").value = urlParams.get("to");
+}
+
+if(urlParams.get("preset")){
+  document.getElementById("preset").value = urlParams.get("preset");
+}
+/* ---------- Default to THIS YEAR if no filter provided ---------- */
+if(!urlParams.get("from") && !urlParams.get("to")){
+  const now = new Date();
+
+  const from = new Date(now.getFullYear(), 0, 1);
+  const to   = new Date(now.getFullYear(), 11, 31);
+
+  document.getElementById("preset").value = "year";
+  document.getElementById("fromDate").value = formatLocalDate(from);
+  document.getElementById("toDate").value   = formatLocalDate(to);
+
+  // auto submit so backend loads correct data
+  document.getElementById("dateFilterForm").submit();
+}
+
+</script>

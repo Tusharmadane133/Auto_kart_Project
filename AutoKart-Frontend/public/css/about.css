@@ -1,0 +1,86 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Full Page Background */
+.about-page {
+  min-height: 100vh;
+  /* background: linear-gradient(120deg, #0f2027, #203a43, #2c5364); */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;   /* center ki jagah top se start */
+  padding: 40px 20px;        /* upar ka space control */
+}
+
+/* White Content Box */
+.about-container {
+  background: #ffffff;
+  width: 1200px;
+  max-width: 100%;
+  padding: 40px;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* Main Heading */
+.about-container h2 {
+  text-align: left;
+  color: #203a43;
+  margin-top: 0;   /* extra top gap remove */
+}
+
+/* Subtitle */
+.subtitle {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+/* Section Headings */
+.about-container h3 {
+  margin-top: 30px;
+  color: #2c5364;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 6px;
+  text-align:left;   /* 👈 YE ADD KARO */
+}
+
+
+/* Paragraph & List Text */
+.about-container p,
+.about-container li {
+  font-size: 14px;
+  color: #4b5563;
+  margin-top: 12px;
+  line-height: 1.7;
+}
+
+/* Bullets */
+.about-container ul {
+  margin-left: 20px;
+  padding-left: 10px;
+}
+
+.about-container li {
+  margin-bottom: 10px;
+}
+
+/* Back Link */
+.back-link {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.back-link a {
+  text-decoration: none;
+  color: #2c5364;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.back-link a:hover {
+  color: #111827;
+}

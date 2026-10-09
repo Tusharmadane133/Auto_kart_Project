@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Careers | AutoKart</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .career-container {
+      background: #ffffff;
+      width: 780px;
+      padding: 40px;
+      border-radius: 14px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #203a43;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    h3 {
+      margin-top: 30px;
+      color: #2c5364;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 6px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 11px;
+      margin: 6px 0 18px 0;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #2c5364;
+      box-shadow: 0 0 0 1px #2c5364;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #2c5364;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #203a43;
+    }
+
+    ul, ol {
+      margin-left: 20px;
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .note {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .back-link a {
+      text-decoration: none;
+      color: #2c5364;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="career-container">
+
+  <h2>Careers at AutoKart</h2>
+  <p class="subtitle">
+    Join our growing team and build impactful e-commerce solutions
+  </p>
+
+  <!-- ================= APPLY FORM ================= -->
+  <form action="/careers/apply" method="POST" enctype="multipart/form-data">
+
+    <label>Full Name</label>
+    <input type="text" name="name" placeholder="Enter your full name" required>
+
+    <label>Email Address</label>
+    <input type="email" name="email" placeholder="Enter your email" required>
+
+    <label>Mobile Number</label>
+    <input type="text" name="mobile" placeholder="Enter mobile number" required>
+
+    <label>Job Position</label>
+    <select name="position" required>
+      <option value="">Select Position</option>
+      <option value="Web Developer">Web Developer</option>
+      <option value="Backend Developer">Backend Developer</option>
+      <option value="UI/UX Designer">UI/UX Designer</option>
+      <option value="Marketing Executive">Marketing Executive</option>
+    </select>
+
+    <label>Experience Level</label>
+    <select name="experience" required>
+      <option value="">Select Experience</option>
+      <option value="Fresher">Fresher</option>
+      <option value="0-1 Years">0–1 Years</option>
+      <option value="1-3 Years">1–3 Years</option>
+      <option value="3+ Years">3+ Years</option>
+    </select>
+
+    <label>Upload Resume (PDF / DOC)</label>
+    <input type="file" name="resume" required>
+
+    <label>Cover Letter (Optional)</label>
+    <textarea
+      name="cover_letter"
+      rows="4"
+      placeholder="Briefly tell us why you are a good fit for this role"></textarea>
+
+    <button type="submit">Apply Now</button>
+  </form>
+
+  <!-- ================= WHY JOIN ================= -->
+  <h3>Why Join AutoKart?</h3>
+  <ul>
+    <li>Work on real-world e-commerce products</li>
+    <li>Fast-growing startup with learning opportunities</li>
+    <li>Supportive, collaborative work culture</li>
+    <li>Career growth and skill development</li>
+  </ul>
+
+  <!-- ================= RESPONSIBILITIES ================= -->
+  <h3>What You’ll Do</h3>
+  <ul>
+    <li>Build and maintain scalable applications</li>
+    <li>Collaborate with design, product, and QA teams</li>
+    <li>Write clean, maintainable, and efficient code</li>
+    <li>Continuously improve features and performance</li>
+  </ul>
+
+  <!-- ================= HIRING PROCESS ================= -->
+  <h3>Our Hiring Process</h3>
+  <ol>
+    <li>Application Review</li>
+    <li>HR Discussion</li>
+    <li>Technical Interview</li>
+    <li>Final Selection</li>
+  </ol>
+
+  <p class="note">
+    AutoKart is an equal opportunity employer.  
+    We value diversity and are committed to creating an inclusive workplace.
+  </p>
+
+  <div class="back-link">
+    <a href="/">← Back to Home</a>
+  </div>
+
+</div>
+
+</body>
+</html>

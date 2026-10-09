@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= __('become_dealer') %> | <%= __('register') %></title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter',sans-serif;
+}
+
+body{
+  background:#f1f7fd;
+  color:#1f2937;
+}
+
+/* HEADER */
+.header{
+  background:#fff;
+  padding:14px 40px;
+  border-bottom:1px solid #e5e7eb;
+}
+.header img{
+  width:80px;
+}
+
+/* MAIN */
+.main{
+  max-width:1150px;
+  margin:40px auto;
+  display:grid;
+  grid-template-columns:1.3fr 1fr;
+  gap:40px;
+  padding:0 20px;
+}
+
+/* LEFT FORM */
+.form-box{
+  background:#fff;
+  padding:36px;
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.06);
+}
+
+/* STEPS */
+.steps{
+  display:flex;
+  gap:25px;
+  margin-bottom:30px;
+  font-size:14px;
+}
+.step{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#9ca3af;
+}
+.step.active{
+  color:#2563eb;
+  font-weight:600;
+}
+.step i{
+  background:#2563eb;
+  color:#fff;
+  border-radius:50%;
+  font-size:11px;
+  padding:6px;
+}
+
+/* INPUTS */
+.input-group{
+  margin-bottom:18px;
+}
+.input-group label{
+  display:block;
+  font-size:13px;
+  margin-bottom:6px;
+  color:#374151;
+  font-weight:500;
+}
+.input-group input,
+.input-group select{
+  width:100%;
+  padding:14px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
+  font-size:14px;
+}
+.input-group input:focus,
+.input-group select:focus{
+  outline:none;
+  border-color:#2563eb;
+  box-shadow:0 0 0 2px rgba(37,99,235,0.15);
+}
+
+/* BUTTON */
+.btn{
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  padding:15px;
+  border-radius:8px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  width:100%;
+}
+.btn:hover{
+  background:#1d4ed8;
+}
+
+/* MESSAGE */
+.msg{
+  padding:14px;
+  border-radius:8px;
+  margin-bottom:20px;
+  font-size:14px;
+}
+.msg.success{
+  background:#ecfdf5;
+  color:#047857;
+}
+.msg.error{
+  background:#fef2f2;
+  color:#b91c1c;
+}
+
+/* RIGHT SIDE */
+.right{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+/* CHECK STATUS CARD */
+.check-status{
+  background:#fff;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.06);
+}
+.check-status h4{
+  margin-bottom:12px;
+  font-size:16px;
+  color:#111827;
+}
+.check-status form{
+  display:flex;
+  gap:10px;
+}
+.check-status input{
+  flex:1;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
+  font-size:14px;
+}
+.check-status input:focus{
+  outline:none;
+  border-color:#2563eb;
+}
+.check-status button{
+  background:#111827;
+  color:#fff;
+  border:none;
+  padding:12px 18px;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+}
+.check-status button:hover{
+  background:#000;
+}
+
+/* BANNER */
+.banner{
+  background:linear-gradient(135deg,#0073e6,#005bb5);
+  color:#fff;
+  border-radius:18px;
+  padding:36px;
+  text-align:center;
+}
+.banner h3{
+  margin-bottom:14px;
+  font-size:22px;
+}
+.banner p{
+  line-height:1.8;
+  font-size:15px;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .main{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<%- include("../user/partials/header") %>
+
+<section class="main">
+
+  <div class="form-box">
+
+  <% if (successMessage) { %>
+    <div class="msg success"><%= successMessage %></div>
+  <% } %>
+  <% if (errorMessage) { %>
+    <div class="msg error"><%= errorMessage %></div>
+  <% } %>
+
+  <div class="steps">
+    <div class="step active"><i class="fa fa-check"></i> <%= __('basic_details') %></div>
+    <div class="step"><i class="fa fa-check"></i> <%= __('business_info') %></div>
+  </div>
+
+<form action="/dealer/register" method="POST" autocomplete="off">
+
+  <div class="input-group">
+    <label><%= __('full_name') %> *</label>
+    <input type="text" name="full_name" required>
+  </div>
+
+  <div class="input-group">
+    <label><%= __('mobile_number') %> *</label>
+    <input type="text" name="mobile" required maxlength="10">
+  </div>
+
+  <div class="input-group">
+    <label><%= __('email_id') %> *</label>
+    <input type="email" name="email" required>
+  </div>
+
+  <div class="input-group">
+    <label><%= __('city') %> *</label>
+    <input type="text" name="city" required placeholder="<%= __('enter_city') %>">
+  </div>
+
+  <div class="input-group">
+    <label><%= __('dealer_type') %> *</label>
+    <select name="dealer_type" required>
+      <option value=""><%= __('select_dealer_type') %></option>
+      <option><%= __('truck_dealer') %></option>
+      <option><%= __('auto_parts_dealer') %></option>
+      <option><%= __('service_center') %></option>
+    </select>
+  </div>
+
+  <button class="btn"><%= __('register_dealer') %> →</button>
+</form>
+</div>
+
+<!-- RIGHT SIDE -->
+<div class="right">
+
+  <div class="check-status">
+    <h4><%= __('check_request_status') %></h4>
+   <form action="/dealer/check_status" method="POST">
+
+      <input type="number" name="mobile" placeholder="<%= __('enter_mobile_number') %>" required>
+      <button type="submit"><%= __('check_status') %></button>
+    </form>
+  </div>
+
+  <div class="banner">
+    <h3><%= __('why_become_dealer') %></h3>
+    <p>
+      ✔ <%= __('pan_india_reach') %><br>
+      ✔ <%= __('high_margins') %><br>
+      ✔ <%= __('dedicated_support') %>
+    </p>
+  </div>
+
+</div>
+</section>
+
+<%- include("../user/partials/footer") %>
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sell Online with Autokart</title>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:#f9fafb;color:#1f2937}
+
+/* COMMON */
+.container{max-width:1200px;margin:auto;padding:0 20px}
+
+/* TOP BAR */
+.top-bar{text-align:center;background:#f1f5f9;font-size:13px;padding:8px}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:9999;background:#fff;border-bottom:1px solid #e5e7eb}
+.nav{display:flex;justify-content:space-between;align-items:center;height:70px}
+.logo{color:#2874f0;font-weight:700}
+.menu{display:flex;align-items:center;gap:16px}
+.menu a{text-decoration:none;color:#374151;font-size:14px}
+.actions{display:flex;align-items:center;gap:16px}
+.login{color:#2874f0;text-decoration:none}
+.cta{display:inline-block;background:#FFCD00;color:#fff;padding:12px 24px;font-weight:600;border-radius:4px;text-decoration:none;cursor:pointer}
+.cta:hover{background:#FFCD00}
+
+/* DROPDOWN */
+.dropdown{position:relative}
+.dropdown-toggle{display:flex;align-items:center;gap:6px}
+.dropdown-menu{
+  position:absolute;top:40px;left:0;background:#fff;min-width:220px;border-radius:8px;box-shadow:0 10px 25px rgba(0,0,0,.15);
+  opacity:0;visibility:hidden;transform:translateY(10px);transition:.2s;z-index:1000;
+}
+.dropdown-menu a{display:block;padding:10px 18px;color:#374151}
+.dropdown-menu a:hover{background:#f1f5f9;color:#2874f0}
+.dropdown:hover .dropdown-menu{opacity:1;visibility:visible;transform:translateY(0)}
+
+/* BREADCRUMB */
+.breadcrumb{font-size:13px;color:#6b7280;padding:15px 20px}
+
+/* HERO */
+.hero{background:#fff;padding:50px 0}
+.hero-wrap{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:40px}
+.hero-text h1{font-size:42px}
+.hero-image img{width:100%;border-radius:12px;height:250px}
+
+/* STATS */
+.stats{margin-top:-40px}
+.stats-box{background:#fff;padding:30px;border-radius:16px;display:grid;grid-template-columns:repeat(5,1fr);text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.05)}
+.stat h3{color:#2874f0}
+.stat p{font-size:13px;color:#6b7280}
+.divider{width:1px;height:40px;background:#e5e7eb;margin:auto}
+
+/* STORIES */
+.stories{padding:80px 0}
+.stories h2{font-size:32px;color:#2874f0;margin-bottom:30px}
+.slider{background:#f4fbff;border-radius:60px;padding:50px 80px;position:relative}
+.slide{display:none;align-items:center;gap:40px}
+.slide.active{display:flex}
+.avatar{width:140px;height:140px;border-radius:50%;background:#ffeb00;display:flex;align-items:center;justify-content:center}
+.avatar img{width:90px;border-radius:50%}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:45px;height:45px;background:#fff;border-radius:50%;box-shadow:0 2px 10px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.arrow.left{left:25px}
+.arrow.right{right:25px}
+.dots{text-align:center;margin-top:20px}
+.dot{width:8px;height:8px;background:#ccc;border-radius:50%;display:inline-block;margin:0 6px;cursor:pointer}
+.dot.active{width:20px;background:#0073e6;border-radius:10px}
+
+/* FOOTER */
+.footer{text-align:center;background:#020617;color:#cbd5e1;padding:20px;font-size:13px}
+
+/* ACCOUNT CONTAINER */
+.account-container{display:flex;max-width:1200px;margin:50px auto;border-radius:12px;overflow:hidden;background:#fff;height:650px;box-shadow:0 10px 30px rgba(0,0,0,.08);}
+.sidebar-account{width:260px;background:#f8f9fa;padding:30px 20px;border-right:1px solid #ddd;display:flex;flex-direction:column}
+.sidebar-account ul{list-style:none}
+.sidebar-account ul li{margin:15px 0;color:#333;cursor:pointer;position: relative;padding-right: 25px;display:flex;align-items:center;gap:10px;border-radius:6px;transition:all .25s ease}
+.sidebar-account ul li::before{content:"\f54f";font-family:"Font Awesome 6 Free";font-weight:900;color:#9ca3af}
+.sidebar-account ul li:hover,.sidebar-account ul li.active{border:1px solid #2874f0;background:#f8fbff;color:#2874f0;font-weight:600}
+.sidebar-account ul li.active::before,.sidebar-account ul li:hover::before{color:#2874f0}
+.sidebar-account ul li::after{content:"\f054";font-family:"Font Awesome 6 Free";font-weight:900;margin-left:auto;opacity:0;transition:.3s;color:#2874f0}
+.sidebar-account ul li.active::after{opacity:1}
+.sidebar-account .help{margin-top:20px;color:#2874f0;font-weight:bold}
+.content-account{flex:1;padding:40px;overflow-y:auto;scroll-behavior:smooth}
+.content-account h1,.section h2{font-size:26px;margin-bottom:10px;color:#2874f0}
+.underline{width:40px;height:4px;background:#2874f0;margin-bottom:20px}
+
+/* CHECKLIST / POINTS */
+.checklist,.points{list-style:none;margin:20px 0}
+.checklist li,.points li{margin-bottom:10px;color:#374151}
+.checklist i,.points i{color:#16a34a;margin-right:8px}
+
+/* VIDEO BOX */
+.video-box{width:100%;height:280px;border-radius:14px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.12);margin-top:20px}
+.video-box img,.video-box iframe{width:100%;height:100%;border:0;border-radius:12px}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .hero-wrap{grid-template-columns:1fr;text-align:center}
+  .stats-box{grid-template-columns:1fr;gap:20px}
+  .divider{display:none}
+  .slide{flex-direction:column;text-align:center}
+  .slider{padding:40px 30px}
+  .account-container{flex-direction:column;height:auto}
+  .sidebar-account{width:100%;border-right:none;border-bottom:1px solid #ddd}
+  .sidebar-items{max-height:200px}
+}
+
+/* Go to top */
+.go-top{position:fixed;bottom:20px;right:20px;background:#e8f0fe;padding:10px 15px;border-radius:20px;cursor:pointer;font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="top-bar">Existing Seller? Explore our product recommendations with Dhamaka Selection</div>
+
+<header class="header">
+  <div class="container nav">
+    <div class="logo">Autokart Seller Hub</div>
+    <nav class="menu">
+      <div class="dropdown">
+        <a class="dropdown-toggle" href="#">Sell Online <i class="fa fa-chevron-down"></i></a>
+        <div class="dropdown-menu">
+           <a href="#">Create Account</a>
+          <a href="#">List Products</a>
+          <a href="#">Storage & Shipping</a>
+          <a href="#">Receive Payments</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a class="dropdown-toggle" href="#">Fees & Commission <i class="fa fa-chevron-down"></i></a>
+        <div class="dropdown-menu">
+          <a href="#">Payment Cycle</a>
+          <a href="#">Fee Type</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a class="dropdown-toggle" href="#">Grow <i class="fa fa-chevron-down"></i></a>
+        <div class="dropdown-menu">
+          <a href="#">FAssured badge</a>
+          <a href="#">Insights & Tools</a>
+          <a href="#">Autokart Ads</a>
+          <a href="#">Autokart Value Services</a>
+          <a href="#">Shopping Festivals</a>
+          <a href="#">Service Partners</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a class="dropdown-toggle" href="#">Learn <i class="fa fa-chevron-down"></i></a>
+        <div class="dropdown-menu">
+          <a href="#">FAQs</a>
+          <a href="#">Seller Success Stories</a>
+          <a href="#">Seller Blogs</a>
+        </div>
+      </div>
+      <a href="#">Shopsy</a>
+    </nav>
+    <div class="actions">
+      <a class="login" href="/dealer__login">Login</a>
+      <a href="/dealer_start_selling" class="cta">Start Selling</a>
+    </div>
+  </div>
+</header>
+
+<div class="container breadcrumb">Home &gt; Sell Online</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-wrap">
+    <div class="hero-text"><h1>Sell Online with Autokart</h1></div>
+    <div class="hero-image">
+      <img src="https://static-assets-web.flixcart.com/fk-sp-static/images/prelogin/banner/Desktop_fee.webp" alt="Autokart Sell">
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container stats-box">
+    <div class="stat"><h3>45 crore+</h3><p>Customers</p></div>
+    <div class="divider"></div>
+    <div class="stat"><h3>7*</h3><p>Payment Cycle</p></div>
+    <div class="divider"></div>
+    <div class="stat"><h3>Low Cost</h3><p>Business</p></div>
+    <div class="divider"></div>
+    <div class="stat"><h3>24x7</h3><p>Support</p></div>
+    <div class="divider"></div>
+    <div class="stat"><h3>Big Billion</h3><p>Days</p></div>
+  </div>
+</section>
+
+<!-- STORIES -->
+<section class="stories">
+  <div class="container">
+    <h2>Seller Success Stories</h2>
+    <div class="slider">
+      <div class="arrow left" onclick="prevSlide()"><i class="fa fa-chevron-left"></i></div>
+
+      <div class="slide active">
+        <div class="avatar"><img src="https://static-assets-web.flixcart.com/fk-sp-static/images/prelogin/sellers/Mohit_Vaghela_Estrelo_yellow.webp" alt="Dinesh Kumar"></div>
+        <div>
+          <h3>Dinesh Kumar, Kemei</h3>
+          <p>Started with 3 products, now owns 3 brands.</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <div class="avatar"><img src="https://static-assets-web.flixcart.com/fk-sp-static/images/prelogin/sellers/UNITED_DENIM_yellow.webp" alt="Raju Lunawath"></div>
+        <div>
+          <h3>Raju Lunawath</h3>
+          <p>Expanded from 1 to 6 categories with 5x growth.</p>
+        </div>
+      </div>
+
+      <div class="arrow right" onclick="nextSlide()"><i class="fa fa-chevron-right"></i></div>
+    </div>
+
+    <div class="dots">
+      <span class="dot active" onclick="currentSlide(0)"></span>
+      <span class="dot" onclick="currentSlide(1)"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ACCOUNT CONTAINER -->
+<section class="account-container">
+  <!-- Sidebar -->
+  <div class="sidebar-account">
+    <div class="sidebar-items">
+      <ul>
+        <li data-target="payment-cycle">Payment Cycle</li>
+        <li data-target="fulfilment-type">Fulfilment Type</li>
+        <li data-target="fee-type">Fee Type</li>
+        <li data-target="calculate-gross-margin">Calculate Gross Margin</li>
+      </ul>
+    </div>
+    <div class="help">Help & Support</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-account">
+    <!-- PAYMENT CYCLE -->
+    <section id="payment-cycle" class="section">
+      <h2>Payment Cycle</h2>
+      <div class="underline"></div>
+      <p>Payments for your orders are credited to your bank account within <strong>7 working days</strong>.</p>
+      <ul class="points">
+        <li><i class="fa-solid fa-check"></i>Fast & reliable settlements</li>
+        <li><i class="fa-solid fa-check"></i>Detailed transaction reports</li>
+        <li><i class="fa-solid fa-check"></i>Transparent commission & fee deductions</li>
+      </ul>
+      <div class="video-box">
+        <img src="https://static-assets-web.flixcart.com/fk-sp-static/images/prelogin/images/group_1000001221.webp" alt="Payment Cycle">
+      </div>
+    </section>
+
+    <!-- FULFILMENT TYPE -->
+    <section id="fulfilment-type" class="section">
+      <h2>Fulfilment Type</h2>
+      <div class="underline"></div>
+      <ul class="checklist">
+        <li><i class="fa-solid fa-check"></i><b>Fulfillment by Autokart (FBF)</b> - Autokart handles storage, packing, shipping, delivery.</li>
+        <li><i class="fa-solid fa-check"></i><b>Non Fulfillment by Autokart (NFBF)</b> - Seller handles storage & shipping.</li>
+      </ul>
+      <div class="video-box">
+        <img src="https://static-assets-web.flixcart.com/fk-sp-static/images/prelogin/images/_fulfillment_1.webp" alt="Fulfilment Type">
+      </div>
+    </section>
+
+    <!-- FEE TYPE -->
+    <section id="fee-type" class="section">
+      <h2>Fee Type</h2>
+      <div class="underline"></div>
+      <ul class="points">
+        <li><i class="fa-solid fa-check"></i>Commission Fees - Percentage of each sale</li>
+        <li><i class="fa-solid fa-check"></i>Listing Fees - Optional product listing charges</li>
+        <li><i class="fa-solid fa-check"></i>Payment Gateway Charges</li>
+      </ul>
+      
+    </section>
+
+    <!-- CALCULATE GROSS MARGIN -->
+    <section id="calculate-gross-margin" class="section">
+      <h2>Calculate Gross Margin</h2>
+      <div class="underline"></div>
+      <ul class="points">
+        <li><i class="fa-solid fa-check"></i>Gross Margin = (Selling Price - Cost - Fees) / Selling Price * 100%</li>
+        <li><i class="fa-solid fa-check"></i>Helps plan pricing & profitability</li>
+      </ul>
+
+    </section>
+  </div>
+</section>
+
+<div class="go-top" onclick="scrollToTop()">↑ Go to Top</div>
+
+<footer class="footer">© 2026 Autokart Seller Hub (UI Clone)</footer>
+
+<script>
+// CTA alert
+document.querySelector(".cta").addEventListener("click",()=>{alert("Redirecting to Autokart Seller Registration 🚀");});
+
+// Sidebar scroll to section
+const items = document.querySelectorAll(".sidebar-items li");
+items.forEach(li=>{
+  li.addEventListener("click", ()=>{
+    const targetId = li.getAttribute("data-target");
+    document.getElementById(targetId).scrollIntoView({behavior:"smooth"});
+  });
+});
+
+// Active highlight on scroll
+const sections = document.querySelectorAll(".content-account .section");
+document.querySelector(".content-account").addEventListener("scroll",()=>{
+  let scrollPos = document.querySelector(".content-account").scrollTop;
+  sections.forEach(section=>{
+    const top = section.offsetTop-60;
+    const bottom = top + section.offsetHeight;
+    items.forEach(li=>{
+      li.classList.remove("active");
+    });
+    if(scrollPos >= top && scrollPos < bottom){
+      document.querySelector(`.sidebar-items li[data-target="${section.id}"]`).classList.add("active");
+    }
+  });
+});
+
+// Go to top
+function scrollToTop(){document.querySelector(".content-account").scrollTo({top:0,behavior:"smooth"});}
+
+// Slider
+let currentIndex=0;
+const slides=document.querySelectorAll(".slide");
+const dots=document.querySelectorAll(".dot");
+function showSlide(index){
+  slides.forEach(s=>s.classList.remove("active"));
+  dots.forEach(d=>d.classList.remove("active"));
+  slides[index].classList.add("active");
+  dots[index].classList.add("active");
+}
+function prevSlide(){currentIndex=(currentIndex-1+slides.length)%slides.length;showSlide(currentIndex);}
+function nextSlide(){currentIndex=(currentIndex+1)%slides.length;showSlide(currentIndex);}
+function currentSlide(index){currentIndex=index;showSlide(currentIndex);}
+</script>
+</body>
+</html>

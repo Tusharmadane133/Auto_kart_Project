@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome Dealer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #1f212b, #2874f0);
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+
+    .welcome-box {
+      text-align: center;
+      animation: zoomIn 1s ease forwards;
+    }
+
+    .welcome-box h1 {
+      font-size: 40px;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      animation: slideDown 1s ease forwards;
+    }
+
+    .welcome-box p {
+      font-size: 18px;
+      opacity: 0.9;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    .checkmark {
+      font-size: 70px;
+      margin-bottom: 20px;
+      animation: pop 0.8s ease forwards;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0); }
+      80% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="welcome-box">
+    <div class="checkmark">🎉</div>
+   <h1>Welcome Dealer 🎉</h1>
+<p>Registration Successful</p>
+
+<script>
+  setTimeout(function() {
+    window.location.href = "/become_dealer";
+  }, 3000);
+</script>
+
+
+</body>
+</html>

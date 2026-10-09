@@ -1,0 +1,280 @@
+<h2>Edit Blog Post</h2>
+  
+  <div id="messageContainer"></div>
+
+  <div id="loadingContainer" class="loading">
+    Loading post data...
+  </div>
+
+  <form id="blogPostForm" style="display: none;">
+    <input type="hidden" id="postId" name="id">
+    
+    <div class="form-grid">
+      <div>
+        <label for="title">Title *</label>
+        <input type="text" id="title" name="title" required>
+      </div>
+
+      <div>
+        <label for="author">Author</label>
+        <input type="text" id="author" name="author">
+      </div>
+
+      <div>
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+          <option value="archived">Archived</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="featured_image">Featured Image URL</label>
+        <input type="text" id="featured_image" name="featured_image" placeholder="https://example.com/image.jpg">
+        <img id="imagePreview" class="image-preview" alt="Image preview">
+      </div>
+
+      <div class="form-full">
+        <label for="excerpt">Excerpt</label>
+        <textarea id="excerpt" name="excerpt" placeholder="Brief description of the blog post..."></textarea>
+      </div>
+
+      <div class="form-full">
+        <label for="content">Content *</label>
+        <textarea id="content" name="content" required placeholder="Write your blog post content here..."></textarea>
+      </div>
+
+      <div class="form-full">
+        <label for="meta_title">Meta Title</label>
+        <input type="text" id="meta_title" name="meta_title" placeholder="SEO title (optional)">
+      </div>
+
+      <div class="form-full">
+        <label for="meta_description">Meta Description</label>
+        <textarea id="meta_description" name="meta_description" placeholder="SEO description (optional)"></textarea>
+      </div>
+
+      <div class="form-full">
+        <label for="meta_keywords">Meta Keywords</label>
+        <input type="text" id="meta_keywords" name="meta_keywords" placeholder="SEO keywords (comma separated)">
+      </div>
+
+      <div class="form-full">
+        <label>Categories</label>
+        <div id="categoriesContainer" class="checkbox-group">
+          <!-- Categories will be loaded here -->
+        </div>
+      </div>
+
+      <div class="form-full">
+        <label>Tags</label>
+        <div id="tagsContainer" class="checkbox-group">
+          <!-- Tags will be loaded here -->
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a href="/admin/blog" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Update Post</button>
+      </div>
+    </div>
+  </form>
+
+  <script>
+    let categories = [];
+    let tags = [];
+    let currentPost = null;
+
+    function getPostId() {
+      const pathParts = window.location.pathname.split('/');
+      return pathParts[pathParts.length - 1];
+    }
+
+    function loadPost() {
+      const postId = getPostId();
+      
+      fetch(`/admin/api/blog/post/${postId}`)
+        .then(response => response.json())
+        .then(data => {
+          currentPost = data;
+          populateForm(data);
+          loadCategoriesAndTags();
+        })
+        .catch(error => {
+          console.error('Error loading post:', error);
+          showMessage('Error loading post data', 'error');
+        });
+    }
+
+    function loadCategoriesAndTags() {
+      // Load categories
+      fetch('/admin/api/blog/categories')
+        .then(response => response.json())
+        .then(data => {
+          categories = data;
+          displayCategories();
+        })
+        .catch(error => console.error('Error loading categories:', error));
+
+      // Load tags
+      fetch('/admin/api/blog/tags')
+        .then(response => response.json())
+        .then(data => {
+          tags = data;
+          displayTags();
+        })
+        .catch(error => console.error('Error loading tags:', error));
+    }
+
+    function populateForm(post) {
+      document.getElementById('postId').value = post.id;
+      document.getElementById('title').value = post.title;
+      document.getElementById('author').value = post.author;
+      document.getElementById('status').value = post.status;
+      document.getElementById('featured_image').value = post.featured_image || '';
+      document.getElementById('excerpt').value = post.excerpt || '';
+      document.getElementById('content').value = post.content;
+      document.getElementById('meta_title').value = post.meta_title || '';
+      document.getElementById('meta_description').value = post.meta_description || '';
+      document.getElementById('meta_keywords').value = post.meta_keywords || '';
+
+      // Show image preview if exists
+      if (post.featured_image) {
+        const preview = document.getElementById('imagePreview');
+        preview.src = post.featured_image;
+        preview.style.display = 'block';
+        preview.onerror = function() {
+          preview.style.display = 'none';
+        };
+      }
+
+      // Hide loading, show form
+      document.getElementById('loadingContainer').style.display = 'none';
+      document.getElementById('blogPostForm').style.display = 'block';
+    }
+
+    function displayCategories() {
+      const container = document.getElementById('categoriesContainer');
+      container.innerHTML = categories.map(category => `
+        <div class="checkbox-item">
+          <input type="checkbox" id="cat_${category.id}" value="${category.id}">
+          <label for="cat_${category.id}" style="margin: 0; font-weight: normal;">${category.name}</label>
+        </div>
+      `).join('');
+
+      // Check selected categories
+      if (currentPost && currentPost.category_ids) {
+        currentPost.category_ids.forEach(catId => {
+          const checkbox = document.getElementById(`cat_${catId}`);
+          if (checkbox) checkbox.checked = true;
+        });
+      }
+    }
+
+    function displayTags() {
+      const container = document.getElementById('tagsContainer');
+      container.innerHTML = tags.map(tag => `
+        <div class="checkbox-item">
+          <input type="checkbox" id="tag_${tag.id}" value="${tag.id}">
+          <label for="tag_${tag.id}" style="margin: 0; font-weight: normal;">${tag.name}</label>
+        </div>
+      `).join('');
+
+      // Check selected tags
+      if (currentPost && currentPost.tag_ids) {
+        currentPost.tag_ids.forEach(tagId => {
+          const checkbox = document.getElementById(`tag_${tagId}`);
+          if (checkbox) checkbox.checked = true;
+        });
+      }
+    }
+
+    function showMessage(message, type = 'success') {
+      const container = document.getElementById('messageContainer');
+      const className = type === 'success' ? 'success' : 'error';
+      container.innerHTML = `<div class="${className}">${message}</div>`;
+      
+      setTimeout(() => {
+        container.innerHTML = '';
+      }, 5000);
+    }
+
+    function getSelectedCheckboxes(selector) {
+      const checkboxes = document.querySelectorAll(selector + ':checked');
+      return Array.from(checkboxes).map(cb => parseInt(cb.value));
+    }
+
+    function generateSlug(title) {
+      return title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim();
+    }
+
+    // Image preview
+    document.getElementById('featured_image').addEventListener('input', function(e) {
+      const preview = document.getElementById('imagePreview');
+      const url = e.target.value;
+      
+      if (url) {
+        preview.src = url;
+        preview.style.display = 'block';
+        preview.onerror = function() {
+          preview.style.display = 'none';
+        };
+      } else {
+        preview.style.display = 'none';
+      }
+    });
+
+    // Form submission
+    document.getElementById('blogPostForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+      
+      // Add selected categories and tags
+      data.categories = getSelectedCheckboxes('#categoriesContainer input[type="checkbox"]');
+      data.tags = getSelectedCheckboxes('#tagsContainer input[type="checkbox"]');
+      
+      // Generate slug from title
+      data.slug = generateSlug(data.title);
+      
+      const postId = data.id;
+      delete data.id;
+      
+      fetch(`/admin/api/blog/post/${postId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.success) {
+          showMessage('Blog post updated successfully!');
+          setTimeout(() => {
+            window.location.href = '/admin/blog';
+          }, 2000);
+        } else {
+          showMessage('Error updating post: ' + (result.error || 'Unknown error'), 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error updating post:', error);
+        showMessage('Error updating post. Please try again.', 'error');
+      });
+    });
+
+    // Load data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadPost();
+    });
+  </script>
+</body>
+</html>

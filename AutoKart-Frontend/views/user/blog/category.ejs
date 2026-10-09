@@ -1,0 +1,483 @@
+<%- include('../partials/header') %>
+
+<!-- SEO Meta Tags -->
+<%- generateMetaTags(meta, hreflangUrls) %>
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+<%- JSON.stringify(structuredData) %>
+</script>
+
+<style>
+  /* Professional Blog Category Styles - AutoKart Brand */
+  .category-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+  }
+
+  .category-header {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 50px 30px;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .category-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .category-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    position: relative;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .category-description {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .blog-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 35px;
+    margin-bottom: 50px;
+  }
+
+  .blog-post {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+  }
+
+  .blog-post::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #007bff, #28a745);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .blog-post:hover::before {
+    transform: scaleX(1);
+  }
+
+  .blog-post:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  }
+
+  .blog-post-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .blog-post:hover .blog-post-image {
+    transform: scale(1.05);
+  }
+
+  .blog-post-content {
+    padding: 30px;
+  }
+
+  .blog-post-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    text-decoration: none;
+    display: block;
+    line-height: 1.3;
+    transition: color 0.3s ease;
+  }
+
+  .blog-post-title:hover {
+    color: #007bff;
+  }
+
+  .blog-post-meta {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: #6c757d;
+    flex-wrap: wrap;
+  }
+
+  .blog-post-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .blog-post-excerpt {
+    color: #495057;
+    line-height: 1.7;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .blog-post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .tag {
+    background: linear-gradient(135deg, #e9ecef, #dee2e6);
+    color: #495057;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    font-weight: 500;
+  }
+
+  .tag:hover {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 50px 0;
+    flex-wrap: wrap;
+  }
+
+  .pagination a,
+  .pagination span {
+    padding: 12px 18px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    min-width: 45px;
+    text-align: center;
+  }
+
+  .pagination a:hover {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-color: #007bff;
+    transform: translateY(-2px);
+  }
+
+  .pagination .active {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  }
+
+  .loading {
+    text-align: center;
+    padding: 60px;
+    color: #6c757d;
+    font-size: 1.2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  }
+
+  .loading::before {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 15px;
+    vertical-align: middle;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .no-posts {
+    text-align: center;
+    padding: 60px;
+    color: #6c757d;
+    font-size: 1.1rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  }
+
+  .no-posts::before {
+    content: '📝';
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  .back-to-blog {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 30px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 12px 24px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: white;
+  }
+
+  .back-to-blog:hover {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    transform: translateX(-5px);
+    box-shadow: 0 5px 20px rgba(0, 123, 255, 0.3);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .category-container {
+      padding: 30px 15px;
+    }
+
+    .blog-posts-grid {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .category-container {
+      padding: 20px 10px;
+    }
+
+    .category-header {
+      padding: 30px 20px;
+    }
+
+    .category-title {
+      font-size: 2.2rem;
+    }
+
+    .category-description {
+      font-size: 1rem;
+    }
+
+    .blog-posts-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-post-content {
+      padding: 20px;
+    }
+
+    .blog-post-title {
+      font-size: 1.4rem;
+    }
+  }
+
+  /* Animation for page load */
+  .blog-post {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="category-container">
+  <a href="/blog" class="back-to-blog">← Back to Blog</a>
+  
+  <div class="category-header">
+    <h1 class="category-title" id="categoryTitle">Category</h1>
+    <p class="category-description" id="categoryDescription">Loading...</p>
+  </div>
+
+  <div id="loadingSpinner" class="loading">
+    <div>Loading posts...</div>
+  </div>
+
+  <div id="blogPostsContainer">
+    <!-- Blog posts will be loaded here -->
+  </div>
+
+  <div id="paginationContainer">
+    <!-- Pagination will be loaded here -->
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+
+  <script>
+    function getCategorySlugFromUrl() {
+      const pathParts = window.location.pathname.split('/');
+      return pathParts[pathParts.length - 1];
+    }
+
+    let currentPage = 1;
+    let currentCategory = '';
+
+    function loadCategoryInfo(categorySlug) {
+      fetch('/api/blog/categories')
+        .then(response => response.json())
+        .then(categories => {
+          const category = categories.find(cat => cat.slug === categorySlug);
+          if (category) {
+            document.getElementById('categoryTitle').textContent = category.name;
+            document.getElementById('categoryDescription').textContent = category.description || `Browse all posts in ${category.name}`;
+          }
+        })
+        .catch(error => console.error('Error loading category info:', error));
+    }
+
+    function loadPosts(page = 1, category = '') {
+      currentPage = page;
+      currentCategory = category;
+      
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const container = document.getElementById('blogPostsContainer');
+      
+      loadingSpinner.style.display = 'block';
+      container.innerHTML = '';
+
+      fetch(`/api/blog/posts?page=${page}&category=${encodeURIComponent(category)}`)
+        .then(response => response.json())
+        .then(data => {
+          loadingSpinner.style.display = 'none';
+          displayPosts(data.posts);
+          displayPagination(data.pagination);
+        })
+        .catch(error => {
+          console.error('Error loading posts:', error);
+          loadingSpinner.style.display = 'none';
+          container.innerHTML = '<div class="no-posts">Error loading posts. Please try again.</div>';
+        });
+    }
+
+    function formatBlogExcerpt(content, maxLength = 150) {
+      if (!content) return 'Read more about this topic...';
+      
+      // Convert markdown-style formatting to plain text for excerpts
+      let plainText = content
+        .replace(/\*\*(.+?)\*\*/g, '$1') // Remove bold markdown
+        .replace(/\*(.+?)\*/g, '$1') // Remove italic markdown
+        .replace(/#{1,6}\s+/g, '') // Remove header markdown
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert links to text
+        .replace(/`([^`]+)`/g, '$1') // Remove code markdown
+        .replace(/[-*+]\s+/g, '• ') // Convert bullet points to bullets
+        .replace(/\d+\.\s+/g, '• ') // Convert numbered lists to bullets
+        .replace(/\n+/g, ' ') // Convert line breaks to spaces
+        .replace(/\s+/g, ' ') // Remove extra spaces
+        .trim();
+      
+      // Truncate to maxLength
+      if (plainText.length > maxLength) {
+        plainText = plainText.substring(0, maxLength).trim() + '...';
+      }
+      
+      return plainText;
+    }
+
+    function displayPosts(posts) {
+      const container = document.getElementById('blogPostsContainer');
+      
+      if (posts.length === 0) {
+        container.innerHTML = '<div class="no-posts">No posts found in this category.</div>';
+        return;
+      }
+
+      const postsHTML = posts.map(post => `
+        <article class="blog-post">
+          ${post.featured_image ? `<img src="${post.featured_image}" alt="${post.title}" class="blog-post-image">` : ''}
+          <div class="blog-post-content">
+            <a href="/blog/${post.slug}" class="blog-post-title">${post.title}</a>
+            <div class="blog-post-meta">
+              <span>📅 ${new Date(post.created_at).toLocaleDateString()}</span>
+              <span>✍️ ${post.author}</span>
+              <span>👁️ ${post.view_count || 0} views</span>
+            </div>
+            <p class="blog-post-excerpt">${post.excerpt || formatBlogExcerpt(post.content)}</p>
+          </div>
+        </article>
+      `).join('');
+
+      container.innerHTML = `<div class="blog-posts-grid">${postsHTML}</div>`;
+    }
+
+    function displayPagination(pagination) {
+      const container = document.getElementById('paginationContainer');
+      
+      let paginationHTML = '<div class="pagination">';
+      
+      if (pagination.has_prev) {
+        paginationHTML += `<a href="#" onclick="loadPosts(${pagination.current_page - 1}, '${currentCategory}'); return false;">Previous</a>`;
+      }
+      
+      for (let i = 1; i <= pagination.total_pages; i++) {
+        const activeClass = i === pagination.current_page ? 'active' : '';
+        paginationHTML += `<a href="#" class="${activeClass}" onclick="loadPosts(${i}, '${currentCategory}'); return false;">${i}</a>`;
+      }
+      
+      if (pagination.has_next) {
+        paginationHTML += `<a href="#" onclick="loadPosts(${pagination.current_page + 1}, '${currentCategory}'); return false;">Next</a>`;
+      }
+      
+      paginationHTML += '</div>';
+      container.innerHTML = paginationHTML;
+    }
+
+    // Load data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      const categorySlug = getCategorySlugFromUrl();
+      loadCategoryInfo(categorySlug);
+      loadPosts(1, categorySlug);
+    });
+  </script>
+</body>
+</html>

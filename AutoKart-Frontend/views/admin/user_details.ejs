@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User List</title>
+
+  <!-- ✅ FONT AWESOME (Eye Icons) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+<style>
+/* =========================
+   CARD
+========================= */
+.card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================
+   HEADINGS
+========================= */
+h2 {
+  margin-bottom: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* =========================
+   TABLE WRAPPER (MOBILE SCROLL)
+========================= */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;          /* 🔥 mobile scroll */
+}
+
+/* =========================
+   TABLE BASE
+========================= */
+table {
+  width: 100%;
+  min-width: 650px;          /* 🔥 prevents break */
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  background: #ffffff;
+}
+
+/* =========================
+   TABLE HEADER
+========================= */
+thead {
+  background: #e8e8e8;
+}
+
+thead th {
+  color: #000000;
+  font-weight: 600;
+  padding: 14px 16px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* =========================
+   TABLE BODY
+========================= */
+tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #111827;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Zebra rows */
+tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* Hover */
+tbody tr:hover {
+  background: #f1f5f9;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn-view {
+  padding: 6px 14px;
+  background: #1f5fd6;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.btn-view:hover {
+  background: #1e40af;
+}
+
+/* =========================
+   PASSWORD DOTS
+========================= */
+.password {
+  color: #6b7280;
+  letter-spacing: 2px;
+}
+
+/* =========================
+   ICONS
+========================= */
+.toggle-icon {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #2563eb;
+  font-size: 15px;
+}
+
+.toggle-icon:hover {
+  color: #1e40af;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+.no-data {
+  text-align: center;
+  padding: 25px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  thead th,
+  tbody td {
+    padding: 10px 12px;
+  }
+
+  .btn-view {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .no-data {
+    font-size: 13px;
+    padding: 20px;
+  }
+}
+
+
+/* =========================
+   PAGINATION (MATCH ORDERS)
+========================= */
+.pagination {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-number,
+.page-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #e5e7eb;
+  color: #111827;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.page-number:hover,
+.page-btn:hover {
+  background: #d1d5db;
+}
+
+.page-number.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+.page-btn.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+  <h2>👤 User List</h2>
+
+
+
+<div style="display:flex;justify-content:flex-end;margin-bottom:20px;">
+  <form method="GET"
+        action="/admin/user"
+        autocomplete="off"
+        style="display:flex;gap:8px;align-items:center;">
+
+    <!-- Prevent Chrome autofill -->
+    <input type="text" name="fakeusernameremembered" style="display:none">
+
+    <input
+      type="text"
+      name="search"
+      value="<%= search || '' %>"
+      placeholder="Search by Mobile"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+      inputmode="numeric"
+      pattern="[0-9]*"
+      oninput="this.value = this.value.replace(/[^0-9]/g,'')"
+      style="padding:6px 10px;border:1px solid #d1d5db;border-radius:6px;width:180px;"
+    />
+
+    <button type="submit"
+      style="padding:6px 14px;background:#2563eb;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;">
+      Search
+    </button>
+
+  </form>
+</div>
+
+
+  <table>
+    <thead>
+      <tr>
+       <th>ID</th>
+<th>Name</th>
+<th>Mobile</th>
+<th>Email</th>
+<th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if (users && users.length > 0) { %>
+        <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.user_id %></td>
+
+            <td>
+              <%= user.user_first_name %> <%= user.user_last_name %>
+            </td>
+
+            <td><%= user.user_mobile %></td>
+
+            <td><%= user.user_email %></td>
+
+            
+
+         
+
+            <td>
+              <a class="btn-view" href="/admin/user/<%= user.user_id %>">
+                View
+              </a>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="5" class="no-data">
+            No users found
+          </td>
+        </tr>
+      <% } %>
+      
+    </tbody>
+    
+  </table>
+<% if (totalPages > 1) { %>
+<div class="pagination">
+
+  <!-- PREV BUTTON -->
+  <a class="page-btn <%= currentPage === 1 ? 'disabled' : '' %>"
+     href="/admin/user?page=<%= currentPage - 1 %>&search=<%= search || '' %>">
+     Prev
+  </a>
+
+  <!-- PAGE NUMBERS -->
+  <% for (let i = 1; i <= totalPages; i++) { %>
+    <a class="page-number <%= currentPage === i ? 'active' : '' %>"
+       href="/admin/user?page=<%= i %>&search=<%= search || '' %>">
+       <%= i %>
+    </a>
+  <% } %>
+
+  <!-- NEXT BUTTON -->
+  <a class="page-btn <%= currentPage === totalPages ? 'disabled' : '' %>"
+     href="/admin/user?page=<%= currentPage + 1 %>&search=<%= search || '' %>">
+     Next
+  </a>
+
+</div>
+<% } %>
+</div>
+
+<script>
+  function togglePassword(icon) {
+    const span = icon.previousElementSibling;
+    const realPassword = span.getAttribute("data-password");
+
+    if (icon.classList.contains("fa-eye")) {
+      span.innerText = realPassword;
+      span.style.letterSpacing = "0";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    } else {
+      span.innerText = "••••••••";
+      span.style.letterSpacing = "2px";
+      icon.classList.remove("fa-eye-slash");
+      icon.classList.add("fa-eye");
+    }
+  }
+</script>
+
+</body>
+</html>

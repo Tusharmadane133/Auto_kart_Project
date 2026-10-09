@@ -1,0 +1,460 @@
+ <title>Dealer Requests</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+/* =====================
+   GLOBAL
+===================== */
+*{
+  box-sizing:border-box;
+  font-family:'Inter',sans-serif;
+}
+
+body{
+  background:#f4f6f9;
+}
+
+h2{
+  margin-bottom:20px;
+  font-size:24px;
+  font-weight:700;
+}
+
+/* =====================
+   SUMMARY DASHBOARD
+===================== */
+.summary{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+  margin-bottom:30px;
+}
+
+.summary-card{
+  background:#fff;
+  border-radius:14px;
+  padding:22px;
+  box-shadow:0 10px 28px rgba(0,0,0,0.06);
+  border-left:5px solid;
+  cursor:pointer;
+  transition:0.2s ease;
+}
+
+.summary-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 14px 32px rgba(0,0,0,0.12);
+}
+
+.summary-card.active{
+  outline:3px solid rgba(37,99,235,0.3);
+}
+
+.summary-card .label{
+  font-size:14px;
+  color:#6b7280;
+  margin-bottom:8px;
+}
+
+.summary-card .count{
+  font-size:32px;
+  font-weight:700;
+}
+
+.summary-card.total{ border-color:#2563eb; }
+.summary-card.pending{ border-color:#f59e0b; }
+.summary-card.approved{ border-color:#16a34a; }
+.summary-card.rejected{ border-color:#dc2626; }
+
+/* =====================
+   CARD
+===================== */
+.card{
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 10px 28px rgba(0,0,0,0.06);
+  padding:20px;
+}
+
+/* =====================
+   TABLE
+===================== */
+table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+}
+
+thead th{
+  background:#f5f5f5;
+  color:#0c0c0c;
+  text-align:left;
+  padding:14px;
+  font-size:13px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+tbody td{
+  padding:14px 12px;
+  border-bottom:1px solid #e5e7eb;
+  font-size:13px;
+  vertical-align:middle;
+}
+
+tbody tr:hover{
+  background:#f9fafb;
+}
+
+/* Fix action + details column wrapping */
+td:nth-child(9),
+td:nth-child(10){
+  white-space:nowrap;
+}
+
+/* =====================
+   STATUS BADGES
+===================== */
+.status{
+  padding:4px 10px;
+  font-size:11px;
+  border-radius:20px;
+  display:inline-block;
+  font-weight:600;
+}
+
+.status.pending{
+  background:#fff7ed;
+  color:#c2410c;
+}
+
+.status.approved{
+  background:#ecfdf5;
+  color:#047857;
+}
+
+.status.rejected{
+  background:#fef2f2;
+  color:#b91c1c;
+}
+
+/* =====================
+   ACTION BUTTONS
+===================== */
+.actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:nowrap;
+}
+
+.btn{
+  padding:7px 14px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600;
+  transition:.2s;
+  white-space:nowrap;
+  height:34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.btn-approve{
+  background:#2563eb;
+  color:#fff;
+}
+
+.btn-approve:hover{
+  background:#1d4ed8;
+}
+
+.btn-reject{
+  background:#dc2626;
+  color:#fff;
+}
+
+.btn-reject:hover{
+  background:#b91c1c;
+}
+
+.btn-disabled{
+  background:#9ca3af;
+  color:#fff;
+  cursor:not-allowed;
+  min-width:100px;
+  text-align:center;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media(max-width:1000px){
+  .summary{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+/* 🔥 MOBILE TABLE → CARD VIEW */
+@media(max-width:600px){
+
+  body{ padding:15px; }
+
+  .summary{
+    grid-template-columns:1fr;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr{
+    display:block;
+    width:100%;
+  }
+
+  thead{
+    display:none;
+  }
+
+  tbody tr{
+    background:#fff;
+    margin-bottom:15px;
+    border-radius:12px;
+    padding:12px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+  }
+
+  tbody td{
+    border:none;
+    padding:6px 0;
+    font-size:13px;
+  }
+
+  tbody td::before{
+    content:attr(data-label);
+    font-weight:600;
+    color:#6b7280;
+    display:block;
+    font-size:12px;
+    margin-bottom:2px;
+  }
+
+  .actions{
+    margin-top:10px;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  .btn{
+    width:100%;
+    text-align:center;
+  }
+}
+
+</style>
+<body>
+
+<h2>Dealer Requests</h2>
+
+<!-- =====================
+     SUMMARY DASHBOARD
+===================== -->
+<div class="summary">
+  <div class="summary-card total active" data-filter="all">
+    <div class="label">Total Requests</div>
+    <div class="count"><%= summary.total %></div>
+  </div>
+
+  <div class="summary-card pending" data-filter="pending">
+    <div class="label">Pending</div>
+    <div class="count"><%= summary.pending %></div>
+  </div>
+
+  <div class="summary-card approved" data-filter="approved">
+    <div class="label">Approved</div>
+    <div class="count"><%= summary.approved %></div>
+  </div>
+
+  <div class="summary-card rejected" data-filter="rejected">
+    <div class="label">Rejected</div>
+    <div class="count"><%= summary.rejected %></div>
+  </div>
+</div>
+
+<!-- =====================
+     TABLE
+===================== -->
+<div class="card">
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Mobile</th>
+      <th>Email</th>
+      <th>City</th>
+      <th>Dealer Type</th>
+      <th>Status</th>
+      <th>Created At</th>
+      <th>Action</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+
+<tbody>
+  <% if (dealers.length === 0) { %>
+    <tr>
+      <td colspan="10">No dealer requests found</td>
+    </tr>
+  <% } %>
+
+  <% dealers.forEach(d => { %>
+    <tr data-status="<%= d.status %>">
+      
+      <!-- ID -->
+      <td><%= d.id %></td>
+
+      <!-- Name -->
+      <td><strong><%= d.full_name %></strong></td>
+
+      <!-- Mobile -->
+      <td><%= d.mobile %></td>
+
+      <!-- Email -->
+      <td><%= d.email %></td>
+
+      <!-- City -->
+      <td><%= d.city %></td>
+
+      <!-- Dealer Type -->
+      <td><%= d.dealer_type %></td>
+
+      <!-- Status -->
+      <td>
+        <span class="status <%= d.status %>"><%= d.status %></span>
+      </td>
+
+      <!-- Created At -->
+      <td>
+        <%= new Date(d.created_at).toLocaleString('en-IN', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        }) %>
+      </td>
+
+      <!-- Action (Approve / Reject / Disabled) -->
+      <td>
+        <% if (d.status === 'pending') { %>
+          <div class="actions">
+            <!-- Approve -->
+            <form action="/admin/dealer/approve" method="POST">
+              <input type="hidden" name="dealer_id" value="<%= d.id %>">
+              <button class="btn btn-approve">Approve</button>
+            </form>
+
+            <!-- Reject button -->
+            <button
+              type="button"
+              class="btn btn-reject"
+              onclick="showRejectReason('<%= d.id %>')">
+              Reject
+            </button>
+          </div>
+
+          <!-- Hidden reject form -->
+          <form
+            id="reject-form-<%= d.id %>"
+            action="/admin/dealer/reject"
+            method="POST"
+            style="display:none; gap:6px; margin-top:6px;"
+          >
+            <input type="hidden" name="dealer_id" value="<%= d.id %>">
+
+            <select name="rejection_reason" required>
+              <option value="">Select reason</option>
+              <option value="Incomplete documents">Incomplete documents</option>
+              <option value="Wrong dealer type">Wrong dealer type</option>
+              <option value="Area already assigned">Area already assigned</option>
+            </select>
+
+            <button class="btn btn-reject" type="submit">
+              Confirm Reject
+            </button>
+          </form>
+
+        <% } else { %>
+          <button class="btn btn-disabled" disabled>
+            <%= d.status.toUpperCase() %>
+          </button>
+        <% } %>
+      </td>
+
+      <!-- ✅ DETAILS (DOWNLOAD PDF) -->
+      <td>
+        <a
+          href="/admin/dealer/<%= d.id %>/pdf"
+          class="btn btn-approve"
+          target="_blank"
+          style="text-decoration:none;"
+        >
+          Download PDF
+        </a>
+      </td>
+
+    </tr>
+  <% }) %>
+</tbody>
+
+</table>
+</div>
+
+<!-- =====================
+     FILTER SCRIPT
+===================== -->
+<script>
+  const cards = document.querySelectorAll('.summary-card');
+  const rows = document.querySelectorAll('tbody tr');
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const filter = card.dataset.filter;
+
+      cards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+
+      rows.forEach(row => {
+        const status = row.dataset.status;
+
+        if (filter === 'all' || status === filter) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+<script>
+  function showRejectReason(id) {
+    const form = document.getElementById("reject-form-" + id);
+    console.log("Reject clicked:", id, form);
+
+    if (form) {
+      form.style.display = "flex";
+    } else {
+      alert("Reject form not found");
+    }
+  }
+</script>
+
+</body>
+</html>

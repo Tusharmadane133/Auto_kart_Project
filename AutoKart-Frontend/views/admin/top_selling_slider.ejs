@@ -1,0 +1,199 @@
+<h2 style="margin-bottom:20px;">
+  Manage Top Selling Sliders
+</h2>
+
+<div style="display:flex; gap:30px; margin-bottom:30px;">
+
+  <!-- LEFT SIDE IMAGE PREVIEW -->
+  <div style="
+      width:50%;
+      border:2px dashed #ccc;
+      border-radius:6px;
+      height:260px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+  ">
+
+    <img id="preview"
+         style="max-width:100%; max-height:100%; display:none;">
+
+    <span id="placeholderText"
+          style="color:#999; position:absolute;">
+      Select image to crop
+    </span>
+
+  </div>
+
+  <!-- RIGHT SIDE FORM -->
+  <div style="width:50%;">
+
+    <form id="sliderForm"
+          action="/admin/middle-banner/upload"
+          method="POST">
+
+      <label><b>Select Top Selling Image</b></label><br>
+      <input type="file"
+             id="imageInput"
+             accept="image/*"
+             required>
+
+      <input type="hidden"
+             name="croppedImage"
+             id="croppedImage">
+
+      <br><br>
+
+      <label><b>Select Redirect Section</b></label><br>
+
+     <select name="redirect_url" required>
+  <option value="">-- Select Section --</option>
+
+  <% sections.forEach(section => { %>
+    <option value="/<%= section.display_slug %>">
+      <%= section.name %>
+    </option>
+  <% }) %>
+</select>
+
+      <br><br>
+
+      <button type="submit"
+              style="background:#1976d2;color:white;padding:8px 16px;border:none;border-radius:4px;">
+        Upload Top Selling Slider
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+<hr style="margin:30px 0;">
+
+<h3>Uploaded Top Selling Sliders</h3>
+
+<div style="display:flex; flex-wrap:wrap; gap:20px;">
+
+  <% if (sliders && sliders.length > 0) { %>
+
+    <% sliders.forEach(slider => { %>
+
+      <div style="
+          width:220px;
+          border:1px solid #ddd;
+          border-radius:6px;
+          padding:10px;
+          text-align:center;
+          background:#fff;
+      ">
+<img src="/uploads/middle-banner/<%= slider.image %>"
+     style="width:100%; height:140px; object-fit:cover; border-radius:4px;">
+
+        <p style="font-size:12px; margin:8px 0; color:#555;">
+          <%= slider.redirect_url %>
+        </p>
+
+     <!-- ✅ DELETE FORM -->
+<form action="/admin/middle-banner/delete/<%= slider.id %>"
+      method="POST"
+      onsubmit="return confirm('Delete this slider?')">
+
+  <button type="submit"
+          style="
+            display:block;
+            width:100%;
+            background-color:#dc3545;
+            color:white;
+            padding:8px 0;
+            border:none;
+            border-radius:4px;
+            font-size:14px;
+            cursor:pointer;
+          ">
+    Delete
+  </button>
+
+</form>
+
+
+
+      </div>
+
+    <% }) %>
+
+  <% } else { %>
+
+    <p>No sliders uploaded yet.</p>
+
+  <% } %>
+
+</div>
+
+<script>
+let cropper;
+const imageInput = document.getElementById("imageInput");
+const preview = document.getElementById("preview");
+const placeholderText = document.getElementById("placeholderText");
+const croppedImageInput = document.getElementById("croppedImage");
+
+imageInput.addEventListener("change", function(e) {
+
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+
+    preview.src = event.target.result;
+    preview.style.display = "block";
+    placeholderText.style.display = "none";
+
+    if (cropper) cropper.destroy();
+
+ cropper = new Cropper(preview, {
+  aspectRatio: 3,      // 🔥 MATCHES FRONTEND
+  viewMode: 1,
+  autoCropArea: 1,
+  responsive: true,
+  background: false,
+  movable: true,
+  zoomable: true,
+  scalable: false
+});
+  };
+
+  reader.readAsDataURL(file);
+});
+
+document.getElementById("sliderForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  if (!cropper) {
+    alert("Please select image first");
+    return;
+  }
+
+
+const canvas = cropper.getCroppedCanvas({
+  imageSmoothingEnabled: true,
+  imageSmoothingQuality: "high"
+});
+
+  const TARGET_WIDTH = 1100;              // fits your vehicle section
+  const TARGET_HEIGHT = 410;
+
+  const resizeCanvas = document.createElement("canvas");
+  resizeCanvas.width = TARGET_WIDTH;
+  resizeCanvas.height = TARGET_HEIGHT;
+
+  const ctx = resizeCanvas.getContext("2d");
+  ctx.drawImage(canvas, 0, 0, TARGET_WIDTH, TARGET_HEIGHT);
+
+  // Export optimized banner
+  croppedImageInput.value = resizeCanvas.toDataURL("image/jpeg", 0.85);
+
+  this.submit();
+});
+</script>
+

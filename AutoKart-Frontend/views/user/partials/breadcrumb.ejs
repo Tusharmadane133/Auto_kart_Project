@@ -1,0 +1,109 @@
+<% 
+/**
+ * Breadcrumb Navigation Component
+ * Generates breadcrumb navigation with structured data
+ * 
+ * @param {Array} breadcrumbs - Array of breadcrumb objects
+ *   Each object should have: { name: string, url: string }
+ */
+
+if (breadcrumbs && breadcrumbs.length > 0) { %>
+
+<!-- Breadcrumb Navigation -->
+<nav aria-label="breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-list">
+    <% breadcrumbs.forEach((crumb, index) => { %>
+      <% if (index === breadcrumbs.length - 1) { %>
+        <li class="breadcrumb-item active" aria-current="page">
+          <%= crumb.name %>
+        </li>
+      <% } else { %>
+        <li class="breadcrumb-item">
+          <a href="<%= crumb.url %>"><%= crumb.name %></a>
+        </li>
+      <% } %>
+    <% }); %>
+  </ol>
+</nav>
+
+<!-- Breadcrumb Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    <% breadcrumbs.forEach((crumb, index) => { %>
+      {
+        "@type": "ListItem",
+        "position": <%= index + 1 %>,
+        "name": "<%= crumb.name.replace(/"/g, '\\"') %>",
+        "item": "<%= (process.env.BASE_URL || 'http://localhost:5000') + crumb.url %>"
+      }<%= index < breadcrumbs.length - 1 ? ',' : '' %>
+    <% }); %>
+  ]
+}
+</script>
+
+<style>
+.breadcrumb-nav {
+  display: none;
+  visibility: hidden;
+  padding: 12px 0;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0 20px;
+  font-size: 14px;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+  content: "/";
+  margin: 0 8px;
+  color: #6c757d;
+}
+
+.breadcrumb-item a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .breadcrumb-nav {
+    display: none;
+    visibility: hidden;
+  }
+  
+  .breadcrumb-list {
+    padding: 0 15px;
+    font-size: 13px;
+  }
+  
+  .breadcrumb-item:not(:last-child)::after {
+    margin: 0 6px;
+  }
+}
+</style>
+
+<% } %>

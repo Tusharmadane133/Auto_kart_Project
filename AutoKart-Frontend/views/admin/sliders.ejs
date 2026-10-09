@@ -1,0 +1,470 @@
+<link rel="stylesheet" href="/css/slider.css">
+
+<h2 style="margin-bottom:20px;">
+  Manage Sliders
+</h2>
+
+<!-- =========================
+     TOP UPLOAD AREA
+========================= -->
+<div
+  style="
+    display:flex;
+    gap:30px;
+    margin-bottom:30px;
+  "
+>
+
+  <!-- =========================
+       IMAGE CROP / PREVIEW AREA
+  ========================= -->
+  <div
+    style="
+      width:50%;
+      border:2px dashed #ccc;
+      border-radius:6px;
+      height:260px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#fafafa;
+      position:relative;
+      overflow:visible;
+    "
+  >
+
+    <img
+  id="cropImage"
+  src=""
+  style="
+    max-width:100%;
+    max-height:100%;
+    display:none;
+  "
+>
+
+
+    <span
+      id="cropHint"
+      style="
+        color:#999;
+        font-size:14px;
+      "
+    >
+      Select image to crop
+    </span>
+
+  </div>
+
+  <!-- =========================
+       UPLOAD CONTROLS
+  ========================= -->
+  <div
+    style="
+      width:50%;
+    "
+  >
+
+    <label
+      style="
+        display:block;
+        margin-bottom:10px;
+        font-weight:bold;
+      "
+    >
+      Select Slider Image
+    </label>
+
+    <input
+      type="file"
+      id="imageInput"
+      accept="image/*"
+      style="
+        margin-bottom:15px;
+      "
+    >
+<label style="display:block;margin-top:10px;font-weight:bold;">
+  Select Redirect Section
+</label>
+
+<select id="redirectSelect"
+        style="width:100%; padding:8px; margin-bottom:10px; border-radius:4px; border:1px solid #ccc;">
+
+  <option value="">-- Select Section --</option>
+
+  <% sections.forEach(section => { %>
+    <option
+      value="/<%= section.display_slug %>"
+      data-id="<%= section.id %>">
+      <%= section.name %>
+    </option>
+  <% }) %>
+
+</select>
+<label style="display:block; margin-top:10px; font-weight:bold;">
+  Select Redirect Sub Section
+</label>
+
+<select id="subRedirectSelect"
+        disabled
+        style="width:100%; padding:8px; margin-bottom:15px; border-radius:4px; border:1px solid #ccc;">
+
+  <option value="">-- Select Sub Section --</option>
+
+  <% subSections.forEach(function(sub){ 
+       const parent = sections.find(s => s.id === sub.section_id);
+  %>
+
+    <option
+      value="/<%= parent.display_slug %>/<%= sub.display_slug %>"
+      data-section="<%= sub.section_id %>">
+      <%= sub.name %>
+    </option>
+
+  <% }) %>
+
+</select>
+
+
+    <br>
+
+    <button
+      type="button"
+      onclick="uploadCroppedSlider()"
+      style="
+        background:#2874f0;
+        color:white;
+        border:none;
+        padding:10px 20px;
+        border-radius:4px;
+        cursor:pointer;
+        font-size:14px;
+      "
+    >
+      Upload Slider
+    </button>
+
+  </div>
+
+</div>
+
+
+<hr
+  style="
+    margin:30px 0;
+  "
+>
+
+<!-- =========================
+     EXISTING SLIDERS
+========================= -->
+<h3
+  style="
+    margin-bottom:15px;
+  "
+>
+  Uploaded Sliders
+</h3>
+
+<div
+  style="
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:20px;
+  "
+>
+  <% sliders.forEach(slide => { %>
+
+    <div
+      style="
+        border:1px solid #ddd;
+        border-radius:6px;
+        padding:10px;
+        background:#ffffff;
+        text-align:center;
+      "
+    >
+
+      <img
+        src="/uploads/sliders/<%= slide.image %>"
+        style="
+          width:100%;
+          height:120px;
+          object-fit:cover;
+          border-radius:4px;
+        "
+      >
+
+      <a
+        href="/admin/sliders/delete/<%= slide.id %>"
+        onclick="return confirm('Delete this slider?')"
+        style="
+          display:block;
+          margin-top:10px;
+          color:#ffffff;
+          background:#e53935;
+          padding:6px;
+          border-radius:4px;
+          text-decoration:none;
+          font-size:13px;
+        "
+      >
+        Delete
+      </a>
+
+    </div>
+
+  <% }) %>
+</div>
+
+
+
+<!-- =========================
+     HOMEPAGE VIDEO SECTION
+========================= -->
+
+<div class="video-section">
+
+  <h3 class="video-title">Homepage Video</h3>
+
+  <div class="video-container">
+
+    <!-- Preview Area -->
+    <div class="video-preview-box">
+      <video id="videoPreview" controls></video>
+      <span id="videoHint">Select video to preview</span>
+    </div>
+
+    <!-- Upload Controls -->
+    <div class="video-controls">
+
+      <label>Select Homepage Video (MP4 only)</label>
+
+      <input 
+        type="file" 
+        id="videoInput" 
+        accept="video/mp4"
+      >
+
+      <button onclick="uploadHomepageVideo()">
+        Upload Video
+      </button>
+
+    </div>
+
+  </div>
+
+
+<!-- 🔥 UPLOADED VIDEOS SECTION -->
+<% if (videos && videos.length > 0) { %>
+  <div class="admin-video-list">
+    <h3 class="admin-video-title">Uploaded Videos</h3>
+
+    <div class="admin-video-grid">
+      <% videos.forEach(video => { %>
+
+        <div class="admin-video-card">
+
+          <!-- 🎬 Video -->
+          <video controls>
+            <source src="<%= video.file_url %>" type="video/mp4">
+          </video>
+
+          <!-- 🟢 Active Badge -->
+          <% if (parseInt(video.is_active) === 1) { %>
+            <span class="active-badge">Active</span>
+          <% } %>
+
+          <!-- 🔘 Buttons -->
+          <div class="video-actions">
+
+            <% if (parseInt(video.is_active) !== 1) { %>
+              <form action="/admin/set-homepage-video/<%= video.id %>" method="POST">
+                <button type="submit" class="set-btn">Set as Homepage</button>
+              </form>
+            <% } %>
+
+            <form action="/admin/delete-video/<%= video.id %>" method="POST">
+              <button type="submit" class="delete-btn">Delete</button>
+            </form>
+
+          </div>
+
+        </div>
+
+      <% }) %>
+    </div>
+  </div>
+<% } %>
+
+
+
+<!-- =========================
+     CROPPER SCRIPT
+========================= -->
+<script>
+  let cropper;
+
+  const imageInput = document.getElementById("imageInput");
+  const cropImage = document.getElementById("cropImage");
+  const cropHint = document.getElementById("cropHint");
+
+  imageInput.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+
+      cropImage.src = e.target.result;
+      cropImage.style.display = "block";
+      cropHint.style.display = "none";
+
+      if (cropper) {
+        cropper.destroy();
+      }
+
+      cropper = new Cropper(cropImage, {
+        aspectRatio: 16 / 4,
+        viewMode: 1,
+        autoCropArea: 1,
+        responsive: true
+      });
+
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+function uploadCroppedSlider() {
+
+const sectionValue = document.getElementById("redirectSelect").value;
+const subSectionValue = document.getElementById("subRedirectSelect").value;
+
+const redirectValue = subSectionValue || sectionValue;
+
+
+  if (!redirectValue) {
+    alert("Please select redirect section");
+    return;
+  }
+
+  if (!cropper) {
+    alert("Please select and crop an image first");
+    return;
+  }
+
+  cropper
+    .getCroppedCanvas({
+      width: 1200,
+      height: 350
+    })
+    .toBlob(function (blob) {
+
+      const formData = new FormData();
+      formData.append("image", blob, "slider.png");
+      formData.append("redirect_url", redirectValue);   // 🔥 VERY IMPORTANT
+
+      fetch("/admin/sliders/add", {
+        method: "POST",
+        body: formData
+      })
+      .then(() => window.location.reload())
+      .catch(() => alert("Upload failed"));
+
+    });
+
+}
+
+</script>
+
+
+<script>
+
+const videoInput = document.getElementById("videoInput");
+const videoPreview = document.getElementById("videoPreview");
+const videoHint = document.getElementById("videoHint");
+
+videoInput.addEventListener("change", function () {
+
+  const file = this.files[0];
+  if (!file) return;
+
+  const url = URL.createObjectURL(file);
+
+  videoPreview.src = url;
+  videoPreview.style.display = "block";
+  videoHint.style.display = "none";
+
+});
+
+function uploadHomepageVideo() {
+
+  const file = videoInput.files[0];
+
+  if (!file) {
+    alert("Please select a video first");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("homepageVideo", file);
+
+  fetch("/admin/upload-video", {
+    method: "POST",
+    body: formData
+  })
+  .then(() => window.location.reload())
+  .catch(() => alert("Video upload failed"));
+
+}
+
+
+
+
+
+
+/* ===============================
+   SECTION → SUBSECTION FILTER
+=============================== */
+
+const sectionSelect = document.getElementById("redirectSelect");
+const subSelect = document.getElementById("subRedirectSelect");
+
+sectionSelect.addEventListener("change", function() {
+
+  const selectedValue = this.value;
+
+  if (!selectedValue) {
+    subSelect.disabled = true;
+    subSelect.value = "";
+    return;
+  }
+
+  subSelect.disabled = false;
+
+ const sectionId =
+  sectionSelect.options[sectionSelect.selectedIndex].dataset.id;
+
+  Array.from(subSelect.options).forEach(option => {
+
+    if (!option.dataset.section) return;
+
+    if (option.dataset.section === sectionId) {
+      option.style.display = "block";
+    } else {
+      option.style.display = "none";
+    }
+
+  });
+
+  subSelect.value = "";
+
+});
+
+</script>
